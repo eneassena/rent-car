@@ -1,0 +1,16 @@
+[
+    {
+        "id": "1",
+        "modelo": "Carro A",
+        "marca": "Marca A",
+        "ano": "2024",
+        "preco": "R$ 500"
+    },
+    {
+        "id": "2",
+        "modelo": "Carro B",
+        "marca": "Marca B",
+        "ano": "2024",
+        "preco": "R$ 600"
+    }
+]
