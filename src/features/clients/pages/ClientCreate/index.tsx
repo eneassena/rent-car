@@ -1,110 +1,76 @@
 
-import { useEffect, useMemo, useState, type SubmitEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useState, type SubmitEvent } from "react";
+import { Car, Mail } from "lucide-react";
 
-import DataTable, {
-  type Column,
-} from "../../../../shared/components/DataTable";
-
-import TableActions from "../../../../shared/components/TableActions";
-import StatusBadge from "../../../../shared/components/StatusBadge";
-import SearchInput from "../../../../shared/components/SearchInput";
-import TablePagination from "../../../../shared/components/TablePagination";
-
-import { clientService } from "../../services/clientService";
-import type { Client } from "../../types/client";
+// import { clientService } from "../../services/clientService";
+// import type { Client } from "../../types/client";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
 
 
 
-interface VeiculoFormState {
-  marca: string;
-  modelo: string;
-  ano: string;
-  placa: string;
-  categoria: string;
-  diaria: string;
+interface ClientesFormType {
+  name: string;
+  email: string;
+  phone: string;
+  cpf: string;
   status: string;
 }
 
-interface VeiculoType {
-  veiculo: VeiculoFormState;
+const clientService = {
+  create: async (client: ClientesFormType) => {
+    // Adicione aqui a lógica para criar um cliente, por exemplo, uma chamada à API
+    console.log("Criando cliente:", client);
+  }
 }
 
-const ClientCreate = () => {
-  const [veiculo, setVeiculo] = useState<VeiculoType | null>(null);
 
-  const [marca, setMarca] = useState('');
-  const [modelo, setModelo] = useState('');
-  const [ano, setAno] = useState('');
-  const [placa, setPlaca] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [diaria, setDiaria] = useState('');
+const ClientCreate = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
   const [status, setStatus] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Adicione aqui a lógica para enviar os dados do formulário
     setLoading(true);
     try {
-      setVeiculo({ veiculo: { marca, modelo, ano, placa, categoria, diaria, status } });
-      console.log(veiculo);
+      await clientService.create({ name, email, phone, cpf, status });
+      // await create({ name, email, phone, cpf, status });
     } catch (error) {
       console.error(error);
+      setError("Ocorreu um erro ao criar o cliente.");
     } finally {
       setLoading(false);
+      setName('');
+      setEmail('');
+      setPhone('');
+      setCpf('');
+      setStatus('');
     }
   };
 
-  const navigate = useNavigate();
-
-  const [clients, setClients] = useState<Client[]>([]);
-  const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-
-  const pageSize = 10;
-
-  // 1. Buscar clientes
-  useEffect(() => {
-    async function loadClients() {
-      try {
-        const result = await clientService.getAll();
-        setClients(result);
-      } catch (error) {
-        console.error("Erro ao carregar clientes:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadClients();
-  }, []);
-
-  // 2. Definir as colunas
-  if (loading) {
-    return <p className="p-6 text-slate-500">Carregando clientes...</p>;
-  }
-
   return (
     <div className="space-y-6">
-      <FormEditOrCreate handleSubmit={handleSubmit}>
+      <FormEditOrCreate handleSubmit={handleSubmit} error={error}>
 
 
         {/* Marca */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="marca" className="block text-sm font-medium text-slate-700">
-            Marca
+          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+            Nome
           </label>
           <div className="relative">
             <Car className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
-              id="marca"
+              id="name"
               type="text"
-              value={marca}
-              onChange={(e) => setMarca(e.target.value)}
-              placeholder="Marca do carro"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nome do cliente"
               className="w-full pl-10 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
@@ -112,19 +78,19 @@ const ClientCreate = () => {
           </div>
         </div>
 
-        {/* Modelo */}
+        {/* Email */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="modelo" className="block text-sm font-medium text-slate-700">
-            Modelo
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+            Email
           </label>
           <div className="relative">
-            <Car className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
-              id="modelo"
-              type="text"
-              value={modelo}
-              onChange={(e) => setModelo(e.target.value)}
-              placeholder="Modelo do carro"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email do cliente"
               className="w-full pl-10 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
@@ -132,18 +98,18 @@ const ClientCreate = () => {
           </div>
         </div>
 
-        {/* Diaria */}
+        {/* Telefone */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="diaria" className="block text-sm font-medium text-slate-700">
-            Diária
+          <label htmlFor="phone" className="block text-sm font-medium text-slate-700">
+            Telefone
           </label>
           <div className="relative">
             <input
-              id="diaria"
+              id="phone"
               type="text"
-              value={diaria}
-              onChange={(e) => setDiaria(e.target.value)}
-              placeholder="Valor da diária"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Telefone do cliente"
               className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
@@ -151,59 +117,18 @@ const ClientCreate = () => {
           </div>
         </div>
 
-        {/* Placa */}
+        {/* Cpf */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="placa" className="block text-sm font-medium text-slate-700">
-            Placa
+          <label htmlFor="cpf" className="block text-sm font-medium text-slate-700">
+            Cpf
           </label>
           <div className="relative">
             <input
-              id="placa"
+              id="cpf"
               type="text"
-              value={placa}
-              onChange={(e) => setPlaca(e.target.value)}
-              placeholder="Placa do carro"
-              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-              required
-              disabled={loading}
-            />
-          </div>
-        </div>
-
-        {/* Categoria sera um select */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="categoria" className="block text-sm font-medium text-slate-700">
-            Categoria
-          </label>
-          <div className="relative">
-            <select
-              id="categoria"
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-              required
-              disabled={loading}
-            >
-              <option value="">Selecione a categoria</option>
-              <option value="sedan">Sedan</option>
-              <option value="suv">SUV</option>
-              <option value="hatch">Hatch</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Ano */}
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="ano" className="block text-sm font-medium text-slate-700">
-            Ano
-          </label>
-          <div className="relative">
-            <input
-              id="ano"
-              type="number"
-              value={ano}
-              onChange={(e) => setAno(e.target.value)}
-              placeholder="Ano do carro"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              placeholder="Cpf do cliente"
               className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
@@ -226,8 +151,8 @@ const ClientCreate = () => {
               disabled={loading}
             >
               <option value="">Selecione o status</option>
-              <option value="disponivel">Disponível</option>
-              <option value="indisponivel">Indisponível</option>
+              <option value="ACTIVE">Disponível</option>
+              <option value="INACTIVE">Indisponível</option>
             </select>
           </div>
         </div>
@@ -235,15 +160,12 @@ const ClientCreate = () => {
         {/* Botão */}
         <button
           type="submit"
-          // disabled={loading}
+          disabled={loading}
           className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-500 text-dark text-sm font-medium rounded-lg hover:bg-brand-700 focus:ring-2 focus:ring-brand-500/40 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          Novo Veiculo
+          Novo Cliente
         </button>
       </FormEditOrCreate>
-
-
-
     </div>
   );
 }

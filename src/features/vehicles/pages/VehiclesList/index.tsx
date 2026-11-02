@@ -1,7 +1,7 @@
 import Views from '@/shared/components/Tables/Views';
 import veiculosData from '@/data/mocks/veiculos.json';
 
- 
+
 const veiculosColumns = [
     { header: 'ID', accessor: 'id' },
     { header: 'Modelo', accessor: 'modelo' },
@@ -12,7 +12,7 @@ const veiculosColumns = [
 ];
 
 
-export default function Veículos() {
+const VehiclesList = () => {
     return (
         <div className="flex flex-col">
             Veículos Page
@@ -20,4 +20,6 @@ export default function Veículos() {
             <Views data={veiculosData} columns={veiculosColumns} />
         </div>
     );
-}
+};
+
+export default VehiclesList;

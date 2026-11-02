@@ -1,11 +1,9 @@
 import { useState, type SubmitEvent } from 'react';
-import { Car } from 'lucide-react';
-import { useParams } from 'react-router-dom';
-import veículoService from '@/data/mocks/veiculos.json';
+import { Car } from 'lucide-react'
 import { FormEditOrCreate } from '@/shared/components/Forms/FormEditOrCreate';
 
-interface VeiculoType {
-    id: string;
+
+interface VeiculoFormState {
     marca: string;
     modelo: string;
     ano: string;
@@ -15,41 +13,45 @@ interface VeiculoType {
     status: string;
 }
 
+interface VeiculoType {
+    veiculo: VeiculoFormState;
+}
 
 
 
-export const PageEditVeiculo = () => {
-    const { id } = useParams();
-    const veículo = veículoService.find((v): v is VeiculoType => v.id === String(id));
-    console.log(veículo);
 
-    const [marca, setMarca] = useState(veículo?.marca || '');
-    const [modelo, setModelo] = useState(veículo?.modelo || '');
-    const [ano, setAno] = useState(veículo?.ano || '');
-    const [placa, setPlaca] = useState(veículo?.placa || '');
-    const [categoria, setCategoria] = useState(veículo?.categoria || '');
-    const [diaria, setDiaria] = useState(veículo?.diaria || '');
-    const [status, setStatus] = useState(veículo?.status || '');
+
+const VehiclesCreate = () => {
+    const [veiculo, setVeiculo] = useState<VeiculoType | null>(null);
+
+    const [marca, setMarca] = useState('');
+    const [modelo, setModelo] = useState('');
+    const [ano, setAno] = useState('');
+    const [placa, setPlaca] = useState('');
+    const [categoria, setCategoria] = useState('');
+    const [diaria, setDiaria] = useState('');
+    const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        // Adicione aqui a lógica para enviar os dados do formulário
         setLoading(true);
         try {
-            // Aqui você pode adicionar a lógica para enviar os dados do formulário para o servidor
-            console.log({ marca, modelo, ano, placa, categoria, diaria, status });
+            setVeiculo({ veiculo: { marca, modelo, ano, placa, categoria, diaria, status } });
+            console.log(veiculo);
         } catch (error) {
             console.error(error);
+            setError('Ocorreu um erro ao enviar o formulário.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center">
-            <h3>Edit Veiculo Page</h3>
-            <FormEditOrCreate handleSubmit={handleSubmit}>
+        <div>
+            <FormEditOrCreate handleSubmit={handleSubmit} error={error}>
                 {/* Marca */}
                 <div className="flex flex-col gap-1.5">
                     <label htmlFor="marca" className="block text-sm font-medium text-slate-700">
@@ -190,17 +192,20 @@ export const PageEditVeiculo = () => {
                     </div>
                 </div>
 
-
-
                 {/* Botão */}
                 <button
                     type="submit"
                     // disabled={loading}
                     className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-500 text-dark text-sm font-medium rounded-lg hover:bg-brand-700 focus:ring-2 focus:ring-brand-500/40 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
-                    Editar Veiculo
+                    Novo Veiculo
                 </button>
             </FormEditOrCreate>
         </div>
+
+
     );
 };
+
+
+export default VehiclesCreate;

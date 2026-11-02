@@ -1,49 +1,67 @@
-import ClientDetails from "@/features/clients/pages/ClientDetails";
-import ClientCreate from "@/features/clients/pages/ClientCreate";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+
 import Dashboard from "@/features/dashboard/pages/Dashboard";
-import Locacoes from "@/features/rentals/pages/Locacoes";
 import Login from "@/features/auth/pages/Login";
 import NotFound from "@/features/pages-default/not-found/NotFound";
-import { PageEditVeiculo } from "@/features/vehicles/pages/edit";
-import { PageRegistreVeiculo } from "@/features/vehicles/pages/registre";
-import Veículos from "@/features/vehicles/pages/Veículos";
 import ProtectedRoute from "@/shared/layout/Auth";
-import { Routes, Route, Navigate } from "react-router-dom";
+
+
+
+// Rotas de clientes
+import ClientDetails from "@/features/clients/pages/ClientDetails";
+import ClientCreate from "@/features/clients/pages/ClientCreate";
+import ClientEdit from "@/features/clients/pages/ClientEdit";
 import ClientList from "@/features/clients/pages/ClientList";
 
-const AppRoutes = () => {
-    return (
-        <Routes>
-            {/* Redireciona para a página de Not Found caso a rota não exista */}
-            <Route path="*" element={<Navigate to="/not-found" replace />} />
-            <Route path="/login" element={<Login />} />
 
-            {/* Not Found */}
-            <Route path="/not-found" element={<NotFound />} />
+// Rotas de locações
+import RentalsList from "@/features/rentals/pages/RentalsList";
+import RentalsDetails from "@/features/rentals/pages/RentalsDetails";
+import RentalsEdit from "@/features/rentals/pages/RentalsEdit";
+import RentalsCreate from "@/features/rentals/pages/RentalsCreate";
 
-            {/* Protegidas */}
-            <Route element={<ProtectedRoute />}>
-                {/* Rotas de dashboard */}
-                <Route path="/dashboard" element={<Dashboard />} />
 
-                {/* Rotas de veículos */}
-                <Route path="/veiculos" element={<Veículos />} />
-                <Route path="/veiculos/edit/:id" element={<PageEditVeiculo />} />
-                <Route path="/veiculos/registre" element={<PageRegistreVeiculo />} />
+// Rotas de veículos
+import VehiclesList from "@/features/vehicles/pages/VehiclesList";
+import VehiclesDetails from "@/features/vehicles/pages/VehiclesDetails";
+import VehiclesEdit from "@/features/vehicles/pages/VehiclesEdit";
+import VehiclesCreate from "@/features/vehicles/pages/VehiclesCreate";
 
-                {/* Rotas de clientes */}
-                <Route path="/clientes" element={<ClientList />} />
-                <Route path="/clientes/edit/:id" element={<ClientDetails />} />
-                <Route path="/clientes/details/:id" element={<ClientDetails />} />
-                <Route path="/clientes/novo" element={<ClientCreate />} />
 
-                {/* Rotas de locações */}
-                <Route path="/locacoes" element={<Locacoes />} />
-                <Route path="/locacoes/edit/:id" element={<Locacoes />} />
-                <Route path="/locacoes/registre" element={<Locacoes />} />
-            </Route>
-        </Routes>
-    );
-}
+const AppRoutes = () => (
+    <Routes>
+        {/* Redireciona para a página de Not Found caso a rota não exista */}
+        <Route path="*" element={<Navigate to="/not-found" replace />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* Not Found */}
+        <Route path="/not-found" element={<NotFound />} />
+
+        {/* Protegidas */}
+        <Route element={<ProtectedRoute />}>
+            {/* Rotas de dashboard */}
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Rotas de veículos */}
+            <Route path="/veiculos" element={<VehiclesList />} />
+            <Route path="/veiculos/:id" element={<VehiclesDetails />} />
+            <Route path="/veiculos/:id/editar" element={<VehiclesEdit />} />
+            <Route path="/veiculos/novo" element={<VehiclesCreate />} />
+
+            {/* Rotas de clientes */}
+            <Route path="/clientes" element={<ClientList />} /> {/* Lista de clientes */}
+            <Route path="/clientes/:id" element={<ClientDetails />} /> {/* Detalhes do cliente */}
+            <Route path="/clientes/:id/editar" element={<ClientEdit />} /> {/* Editar cliente */}
+            <Route path="/clientes/novo" element={<ClientCreate />} /> {/* Criar novo cliente */}
+
+            {/* Rotas de locações */}
+            <Route path="/locacoes" element={<RentalsList />} />
+            <Route path="/locacoes/:id" element={<RentalsDetails />} />
+            <Route path="/locacoes/:id/editar" element={<RentalsEdit />} />
+            <Route path="/locacoes/novo" element={<RentalsCreate />} />
+        </Route>
+    </Routes>
+)
 
 export default AppRoutes;

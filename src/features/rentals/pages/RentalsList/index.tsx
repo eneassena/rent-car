@@ -4,7 +4,7 @@ import { useData } from '@/contexts/dataContext';
 import Views from '@/shared/components/Tables/Views';
 
 
-const locacoesColumns = [
+const rentalsColumns = [
     { header: 'Veículo', accessor: 'veiculo' },
     { header: 'Cliente', accessor: 'cliente' },
     { header: 'Data Início', accessor: 'data_inicio' },
@@ -12,7 +12,7 @@ const locacoesColumns = [
     { header: 'Valor', accessor: 'valor' }
 ];
 
-export default function Locacoes() {
+ const RentalsList = () => {
     const context = useData();
     const data = 'data' in context ? context.data : undefined;
 
@@ -21,7 +21,9 @@ export default function Locacoes() {
             <h1>Locações Page</h1>
             <p>Data from context: {JSON.stringify(data)}</p>
 
-            <Views data={locacoesData} columns={locacoesColumns} />
+            <Views data={locacoesData} columns={rentalsColumns} />
         </div>
     );
-}
+};
+
+export default RentalsList;

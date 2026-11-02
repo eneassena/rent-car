@@ -1,28 +1,12 @@
 {
-  "produtos": [
+  "clientes": [
     {
       "id": 1,
-      "nome": "Mouse sem fio",
-      "categoria": "Periféricos",
-      "marca": "Exemplo",
-      "preco": 89.9,
-      "detalhes": "Mouse para uso diário",
-      "imagem": "/imagens/mouse.png"
-    }
-  ],
-  "categorias": [
-    {
-      "id": 1,
-      "nome": "Periféricos",
-      "descricao": "Acessórios para computadores"
-    }
-  ],
-  "usuarios": [
-    {
-      "id": 1,
-      "nome": "admin",
+      "name": "admin",
       "email": "admin@bahiavai.com",
-      "senha": "12345678"
+      "phone": "12345678",
+      "cpf": "12345678",
+      "status": "ACTIVE"
     }
   ]
 }

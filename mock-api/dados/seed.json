@@ -2,12 +2,12 @@
   "produtos": [
     {
       "id": 1,
-      "nome": "Teclado mecânico",
+      "nome": "Mouse sem fio",
       "categoria": "Periféricos",
       "marca": "Exemplo",
-      "preco": 249.9,
-      "detalhes": "Teclado para testes",
-      "imagem": "/imagens/teclado.png"
+      "preco": 89.9,
+      "detalhes": "Mouse para uso diário",
+      "imagem": "/imagens/mouse.png"
     }
   ],
   "categorias": [
@@ -15,6 +15,14 @@
       "id": 1,
       "nome": "Periféricos",
       "descricao": "Acessórios para computadores"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "nome": "admin",
+      "email": "admin@bahiavai.com",
+      "senha": "12345678"
     }
   ]
 }
