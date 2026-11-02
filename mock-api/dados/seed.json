@@ -1,0 +1,20 @@
+{
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Teclado mecânico",
+      "categoria": "Periféricos",
+      "marca": "Exemplo",
+      "preco": 249.9,
+      "detalhes": "Teclado para testes",
+      "imagem": "/imagens/teclado.png"
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "nome": "Periféricos",
+      "descricao": "Acessórios para computadores"
+    }
+  ]
+}

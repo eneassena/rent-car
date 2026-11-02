@@ -1,18 +1,362 @@
 [
   {
     "id": "1",
-    "veiculo": "Carro A",
-    "cliente": "Cliente 1",
-    "data_inicio": "2024-06-01",
-    "data_fim": "2024-06-05",
-    "valor": "R$ 500"
+    "veiculo": "Fiat Strada",
+    "cliente": "Maria Silva",
+    "data_inicio": "2026-01-05",
+    "data_fim": "2026-01-08",
+    "valor": "R$ 417"
   },
   {
     "id": "2",
-    "veiculo": "Carro B",
-    "cliente": "Cliente 2",
-    "data_inicio": "2024-06-03",
-    "data_fim": "2024-06-07",
+    "veiculo": "Volkswagen Polo",
+    "cliente": "José Santos",
+    "data_inicio": "2026-01-10",
+    "data_fim": "2026-01-15",
+    "valor": "R$ 800"
+  },
+  {
+    "id": "3",
+    "veiculo": "Volkswagen T-Cross",
+    "cliente": "Ana Oliveira",
+    "data_inicio": "2026-01-12",
+    "data_fim": "2026-01-14",
+    "valor": "R$ 500"
+  },
+  {
+    "id": "4",
+    "veiculo": "Fiat Argo",
+    "cliente": "João Souza",
+    "data_inicio": "2026-01-18",
+    "data_fim": "2026-01-22",
+    "valor": "R$ 264"
+  },
+  {
+    "id": "5",
+    "veiculo": "Chevrolet Onix",
+    "cliente": "Francisca Pereira",
+    "data_inicio": "2026-01-20",
+    "data_fim": "2026-01-27",
+    "valor": "R$ 840"
+  },
+  {
+    "id": "6",
+    "veiculo": "Hyundai Creta",
+    "cliente": "Antônio Ferreira",
+    "data_inicio": "2026-02-02",
+    "data_fim": "2026-02-06",
+    "valor": "R$ 1000"
+  },
+  {
+    "id": "7",
+    "veiculo": "BYD Dolphin Mini",
+    "cliente": "Júlia Lima",
+    "data_inicio": "2026-02-05",
+    "data_fim": "2026-02-09",
+    "valor": "R$ 1280"
+  },
+  {
+    "id": "8",
+    "veiculo": "Renault Kwid",
+    "cliente": "Francisco Alves",
+    "data_inicio": "2026-02-10",
+    "data_fim": "2026-02-12",
+    "valor": "R$ 124"
+  },
+  {
+    "id": "9",
+    "veiculo": "Toyota Corolla",
+    "cliente": "Antônia Rodrigues",
+    "data_inicio": "2026-02-14",
+    "data_fim": "2026-02-20",
+    "valor": "R$ 1176"
+  },
+  {
+    "id": "10",
+    "veiculo": "Jeep Compass",
+    "cliente": "Pedro Costa",
+    "data_inicio": "2026-02-18",
+    "data_fim": "2026-02-23",
+    "valor": "R$ 985"
+  },
+  {
+    "id": "11",
+    "veiculo": "Fiat Mobi",
+    "cliente": "Juliana Carvalho",
+    "data_inicio": "2026-03-01",
+    "data_fim": "2026-03-05",
+    "valor": "R$ 360"
+  },
+  {
+    "id": "12",
+    "veiculo": "Volkswagen Nivus",
+    "cliente": "Carlos Gomes",
+    "data_inicio": "2026-03-04",
+    "data_fim": "2026-03-10",
+    "valor": "R$ 1320"
+  },
+  {
+    "id": "13",
+    "veiculo": "Toyota Hilux",
+    "cliente": "Adriana Martins",
+    "data_inicio": "2026-03-08",
+    "data_fim": "2026-03-13",
+    "valor": "R$ 2250"
+  },
+  {
+    "id": "14",
+    "veiculo": "Honda HR-V",
+    "cliente": "Lucas Rocha",
+    "data_inicio": "2026-03-12",
+    "data_fim": "2026-03-16",
+    "valor": "R$ 920"
+  },
+  {
+    "id": "15",
+    "veiculo": "Fiat Cronos",
+    "cliente": "Fernanda Ribeiro",
+    "data_inicio": "2026-03-15",
+    "data_fim": "2026-03-19",
+    "valor": "R$ 316"
+  },
+  {
+    "id": "16",
+    "veiculo": "Volkswagen Virtus",
+    "cliente": "Luiz Almeida",
+    "data_inicio": "2026-03-20",
+    "data_fim": "2026-03-25",
+    "valor": "R$ 750"
+  },
+  {
+    "id": "17",
+    "veiculo": "Chevrolet Tracker",
+    "cliente": "Márcia Barbosa",
+    "data_inicio": "2026-04-01",
+    "data_fim": "2026-04-06",
+    "valor": "R$ 1200"
+  },
+  {
+    "id": "18",
+    "veiculo": "Hyundai HB20",
+    "cliente": "Paulo Araújo",
+    "data_inicio": "2026-04-03",
+    "data_fim": "2026-04-08",
+    "valor": "R$ 700"
+  },
+  {
+    "id": "19",
+    "veiculo": "GWM Haval H6",
+    "cliente": "Patrícia Nascimento",
+    "data_inicio": "2026-04-07",
+    "data_fim": "2026-04-12",
+    "valor": "R$ 1515"
+  },
+  {
+    "id": "20",
+    "veiculo": "Fiat Toro",
+    "cliente": "Gabriel Moreira",
+    "data_inicio": "2026-04-10",
+    "data_fim": "2026-04-15",
+    "valor": "R$ 1750"
+  },
+  {
+    "id": "21",
+    "veiculo": "Nissan Kicks",
+    "cliente": "Helena Cardoso",
+    "data_inicio": "2026-04-14",
+    "data_fim": "2026-04-18",
+    "valor": "R$ 840"
+  },
+  {
+    "id": "22",
+    "veiculo": "Renault Kwid",
+    "cliente": "Rafael Teixeira",
+    "data_inicio": "2026-04-17",
+    "data_fim": "2026-04-20",
+    "valor": "R$ 186"
+  },
+  {
+    "id": "23",
+    "veiculo": "BYD Dolphin",
+    "cliente": "Camila Correia",
+    "data_inicio": "2026-04-22",
+    "data_fim": "2026-04-28",
+    "valor": "R$ 1680"
+  },
+  {
+    "id": "24",
+    "veiculo": "Chevrolet Onix Plus",
+    "cliente": "Thiago Monteiro",
+    "data_inicio": "2026-05-01",
+    "data_fim": "2026-05-05",
     "valor": "R$ 600"
+  },
+  {
+    "id": "25",
+    "veiculo": "Ford Ranger",
+    "cliente": "Larissa Freitas",
+    "data_inicio": "2026-05-03",
+    "data_fim": "2026-05-09",
+    "valor": "R$ 2520"
+  },
+  {
+    "id": "26",
+    "veiculo": "Volkswagen Tera",
+    "cliente": "Maria Silva",
+    "data_inicio": "2026-05-06",
+    "data_fim": "2026-05-10",
+    "valor": "R$ 840"
+  },
+  {
+    "id": "27",
+    "veiculo": "Fiat Pulse",
+    "cliente": "José Santos",
+    "data_inicio": "2026-05-10",
+    "data_fim": "2026-05-14",
+    "valor": "R$ 800"
+  },
+  {
+    "id": "28",
+    "veiculo": "Honda Civic",
+    "cliente": "Ana Oliveira",
+    "data_inicio": "2026-05-13",
+    "data_fim": "2026-05-18",
+    "valor": "R$ 1825"
+  },
+  {
+    "id": "29",
+    "veiculo": "Jeep Renegade",
+    "cliente": "João Souza",
+    "data_inicio": "2026-05-17",
+    "data_fim": "2026-05-21",
+    "valor": "R$ 596"
+  },
+  {
+    "id": "30",
+    "veiculo": "Peugeot 2008",
+    "cliente": "Francisca Pereira",
+    "data_inicio": "2026-05-20",
+    "data_fim": "2026-05-25",
+    "valor": "R$ 940"
+  },
+  {
+    "id": "31",
+    "veiculo": "Fiat Strada",
+    "cliente": "Antônio Ferreira",
+    "data_inicio": "2026-06-01",
+    "data_fim": "2026-06-06",
+    "valor": "R$ 695"
+  },
+  {
+    "id": "32",
+    "veiculo": "Volkswagen Polo",
+    "cliente": "Júlia Lima",
+    "data_inicio": "2026-06-04",
+    "data_fim": "2026-06-09",
+    "valor": "R$ 800"
+  },
+  {
+    "id": "33",
+    "veiculo": "Volkswagen T-Cross",
+    "cliente": "Francisco Alves",
+    "data_inicio": "2026-06-07",
+    "data_fim": "2026-06-12",
+    "valor": "R$ 1250"
+  },
+  {
+    "id": "34",
+    "veiculo": "Fiat Argo",
+    "cliente": "Antônia Rodrigues",
+    "data_inicio": "2026-06-10",
+    "data_fim": "2026-06-13",
+    "valor": "R$ 198"
+  },
+  {
+    "id": "35",
+    "veiculo": "Chevrolet Onix",
+    "cliente": "Pedro Costa",
+    "data_inicio": "2026-06-14",
+    "data_fim": "2026-06-19",
+    "valor": "R$ 600"
+  },
+  {
+    "id": "36",
+    "veiculo": "Hyundai Creta",
+    "cliente": "Juliana Carvalho",
+    "data_inicio": "2026-06-17",
+    "data_fim": "2026-06-22",
+    "valor": "R$ 1250"
+  },
+  {
+    "id": "37",
+    "veiculo": "BYD Dolphin Mini",
+    "cliente": "Carlos Gomes",
+    "data_inicio": "2026-06-20",
+    "data_fim": "2026-06-25",
+    "valor": "R$ 1600"
+  },
+  {
+    "id": "38",
+    "veiculo": "Renault Kwid",
+    "cliente": "Adriana Martins",
+    "data_inicio": "2026-06-23",
+    "data_fim": "2026-06-26",
+    "valor": "R$ 186"
+  },
+  {
+    "id": "39",
+    "veiculo": "Toyota Corolla",
+    "cliente": "Lucas Rocha",
+    "data_inicio": "2026-07-01",
+    "data_fim": "2026-07-07",
+    "valor": "R$ 1176"
+  },
+  {
+    "id": "40",
+    "veiculo": "Jeep Compass",
+    "cliente": "Fernanda Ribeiro",
+    "data_inicio": "2026-07-04",
+    "data_fim": "2026-07-09",
+    "valor": "R$ 985"
+  },
+  {
+    "id": "41",
+    "veiculo": "Fiat Mobi",
+    "cliente": "Luiz Almeida",
+    "data_inicio": "2026-07-07",
+    "data_fim": "2026-07-10",
+    "valor": "R$ 270"
+  },
+  {
+    "id": "42",
+    "veiculo": "Volkswagen Nivus",
+    "cliente": "Márcia Barbosa",
+    "data_inicio": "2026-07-10",
+    "data_fim": "2026-07-15",
+    "valor": "R$ 1100"
+  },
+  {
+    "id": "43",
+    "veiculo": "Toyota Hilux",
+    "cliente": "Paulo Araújo",
+    "data_inicio": "2026-07-13",
+    "data_fim": "2026-07-18",
+    "valor": "R$ 2250"
+  },
+  {
+    "id": "44",
+    "veiculo": "Honda HR-V",
+    "cliente": "Patrícia Nascimento",
+    "data_inicio": "2026-07-16",
+    "data_fim": "2026-07-20",
+    "valor": "R$ 920"
+  },
+  {
+    "id": "45",
+    "veiculo": "Fiat Cronos",
+    "cliente": "Gabriel Moreira",
+    "data_inicio": "2026-07-19",
+    "data_fim": "2026-07-23",
+    "valor": "R$ 316"
   }
 ]

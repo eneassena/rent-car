@@ -1,16 +1,302 @@
 [
-    {
-        "id": "1",
-        "modelo": "Carro A",
-        "marca": "Marca A",
-        "ano": "2024",
-        "preco": "R$ 500"
-    },
-    {
-        "id": "2",
-        "modelo": "Carro B",
-        "marca": "Marca B",
-        "ano": "2024",
-        "preco": "R$ 600"
-    }
+  {
+    "id": "1",
+    "modelo": "Fiat Strada",
+    "marca": "Fiat",
+    "ano": "2026",
+    "placa": "ABC-1A23",
+    "categoria": "Picape",
+    "diaria": "R$ 139",
+    "status": "Disponível"
+  },
+  {
+    "id": "2",
+    "modelo": "Volkswagen Polo",
+    "marca": "Volkswagen",
+    "ano": "2026",
+    "placa": "DEF-4B56",
+    "categoria": "Hatch",
+    "diaria": "R$ 160",
+    "status": "Alugado"
+  },
+  {
+    "id": "3",
+    "modelo": "Volkswagen T-Cross",
+    "marca": "Volkswagen",
+    "ano": "2026",
+    "placa": "GHI-7C89",
+    "categoria": "SUV",
+    "diaria": "R$ 250",
+    "status": "Disponível"
+  },
+  {
+    "id": "4",
+    "modelo": "Fiat Argo",
+    "marca": "Fiat",
+    "ano": "2025",
+    "placa": "JKL-0D12",
+    "categoria": "Hatch",
+    "diaria": "R$ 66",
+    "status": "Disponível"
+  },
+  {
+    "id": "5",
+    "modelo": "Chevrolet Onix",
+    "marca": "Chevrolet",
+    "ano": "2026",
+    "placa": "MNO-3E45",
+    "categoria": "Hatch",
+    "diaria": "R$ 120",
+    "status": "Alugado"
+  },
+  {
+    "id": "6",
+    "modelo": "Hyundai Creta",
+    "marca": "Hyundai",
+    "ano": "2026",
+    "placa": "PQR-6F78",
+    "categoria": "SUV",
+    "diaria": "R$ 250",
+    "status": "Disponível"
+  },
+  {
+    "id": "7",
+    "modelo": "BYD Dolphin Mini",
+    "marca": "BYD",
+    "ano": "2026",
+    "placa": "STU-9G01",
+    "categoria": "Elétrico",
+    "diaria": "R$ 320",
+    "status": "Disponível"
+  },
+  {
+    "id": "8",
+    "modelo": "Renault Kwid",
+    "marca": "Renault",
+    "ano": "2025",
+    "placa": "VWX-2H34",
+    "categoria": "Hatch",
+    "diaria": "R$ 62",
+    "status": "Manutenção"
+  },
+  {
+    "id": "9",
+    "modelo": "Toyota Corolla",
+    "marca": "Toyota",
+    "ano": "2026",
+    "placa": "YZA-5I67",
+    "categoria": "Sedan",
+    "diaria": "R$ 196",
+    "status": "Alugado"
+  },
+  {
+    "id": "10",
+    "modelo": "Jeep Compass",
+    "marca": "Jeep",
+    "ano": "2026",
+    "placa": "BCD-8J90",
+    "categoria": "SUV",
+    "diaria": "R$ 197",
+    "status": "Disponível"
+  },
+  {
+    "id": "11",
+    "modelo": "Fiat Mobi",
+    "marca": "Fiat",
+    "ano": "2025",
+    "placa": "EFG-1K23",
+    "categoria": "Hatch",
+    "diaria": "R$ 90",
+    "status": "Disponível"
+  },
+  {
+    "id": "12",
+    "modelo": "Volkswagen Nivus",
+    "marca": "Volkswagen",
+    "ano": "2026",
+    "placa": "HIJ-4L56",
+    "categoria": "SUV",
+    "diaria": "R$ 220",
+    "status": "Alugado"
+  },
+  {
+    "id": "13",
+    "modelo": "Toyota Hilux",
+    "marca": "Toyota",
+    "ano": "2025",
+    "placa": "KLM-7M89",
+    "categoria": "Picape",
+    "diaria": "R$ 450",
+    "status": "Disponível"
+  },
+  {
+    "id": "14",
+    "modelo": "Honda HR-V",
+    "marca": "Honda",
+    "ano": "2026",
+    "placa": "NOP-0N12",
+    "categoria": "SUV",
+    "diaria": "R$ 230",
+    "status": "Disponível"
+  },
+  {
+    "id": "15",
+    "modelo": "Fiat Cronos",
+    "marca": "Fiat",
+    "ano": "2025",
+    "placa": "QRS-3O45",
+    "categoria": "Sedan",
+    "diaria": "R$ 79",
+    "status": "Alugado"
+  },
+  {
+    "id": "16",
+    "modelo": "Volkswagen Virtus",
+    "marca": "Volkswagen",
+    "ano": "2026",
+    "placa": "TUV-6P78",
+    "categoria": "Sedan",
+    "diaria": "R$ 150",
+    "status": "Disponível"
+  },
+  {
+    "id": "17",
+    "modelo": "Chevrolet Tracker",
+    "marca": "Chevrolet",
+    "ano": "2026",
+    "placa": "WXY-9Q01",
+    "categoria": "SUV",
+    "diaria": "R$ 240",
+    "status": "Manutenção"
+  },
+  {
+    "id": "18",
+    "modelo": "Hyundai HB20",
+    "marca": "Hyundai",
+    "ano": "2025",
+    "placa": "ZAB-2R34",
+    "categoria": "Hatch",
+    "diaria": "R$ 140",
+    "status": "Disponível"
+  },
+  {
+    "id": "19",
+    "modelo": "GWM Haval H6",
+    "marca": "GWM",
+    "ano": "2026",
+    "placa": "CDE-5S67",
+    "categoria": "SUV",
+    "diaria": "R$ 303",
+    "status": "Alugado"
+  },
+  {
+    "id": "20",
+    "modelo": "Fiat Toro",
+    "marca": "Fiat",
+    "ano": "2025",
+    "placa": "FGH-8T90",
+    "categoria": "Picape",
+    "diaria": "R$ 350",
+    "status": "Disponível"
+  },
+  {
+    "id": "21",
+    "modelo": "Nissan Kicks",
+    "marca": "Nissan",
+    "ano": "2026",
+    "placa": "IJK-1U23",
+    "categoria": "SUV",
+    "diaria": "R$ 210",
+    "status": "Disponível"
+  },
+  {
+    "id": "22",
+    "modelo": "Renault Kwid",
+    "marca": "Renault",
+    "ano": "2026",
+    "placa": "LMN-4V56",
+    "categoria": "Hatch",
+    "diaria": "R$ 62",
+    "status": "Alugado"
+  },
+  {
+    "id": "23",
+    "modelo": "BYD Dolphin",
+    "marca": "BYD",
+    "ano": "2026",
+    "placa": "OPQ-7W89",
+    "categoria": "Elétrico",
+    "diaria": "R$ 280",
+    "status": "Disponível"
+  },
+  {
+    "id": "24",
+    "modelo": "Chevrolet Onix Plus",
+    "marca": "Chevrolet",
+    "ano": "2025",
+    "placa": "RST-0X12",
+    "categoria": "Sedan",
+    "diaria": "R$ 150",
+    "status": "Disponível"
+  },
+  {
+    "id": "25",
+    "modelo": "Ford Ranger",
+    "marca": "Ford",
+    "ano": "2026",
+    "placa": "UVW-3Y45",
+    "categoria": "Picape",
+    "diaria": "R$ 420",
+    "status": "Manutenção"
+  },
+  {
+    "id": "26",
+    "modelo": "Volkswagen Tera",
+    "marca": "Volkswagen",
+    "ano": "2026",
+    "placa": "XYZ-6Z78",
+    "categoria": "SUV",
+    "diaria": "R$ 210",
+    "status": "Disponível"
+  },
+  {
+    "id": "27",
+    "modelo": "Fiat Pulse",
+    "marca": "Fiat",
+    "ano": "2025",
+    "placa": "ABC-9A01",
+    "categoria": "SUV",
+    "diaria": "R$ 200",
+    "status": "Alugado"
+  },
+  {
+    "id": "28",
+    "modelo": "Honda Civic",
+    "marca": "Honda",
+    "ano": "2026",
+    "placa": "DEF-2B34",
+    "categoria": "Sedan",
+    "diaria": "R$ 365",
+    "status": "Disponível"
+  },
+  {
+    "id": "29",
+    "modelo": "Jeep Renegade",
+    "marca": "Jeep",
+    "ano": "2025",
+    "placa": "GHI-5C67",
+    "categoria": "SUV",
+    "diaria": "R$ 149",
+    "status": "Disponível"
+  },
+  {
+    "id": "30",
+    "modelo": "Peugeot 2008",
+    "marca": "Peugeot",
+    "ano": "2026",
+    "placa": "JKL-8D90",
+    "categoria": "SUV",
+    "diaria": "R$ 188",
+    "status": "Alugado"
+  }
 ]
