@@ -1,26 +1,15 @@
 import type { LoginCredentials, AuthResponse } from '@/types/auth';
+import api from './api.service';
+
 
 const TOKEN_KEY = 'rentcar.token';
 
+
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    // 🔌 Trocar pelo endpoint real: await api.post('/auth/login', credentials)
-    // Mock temporário para desenvolvimento:
-    await new Promise((r) => setTimeout(r, 800));
-
-    if (credentials.email === 'admin@rentcar.com' && credentials.password === '123456') {
-      return {
-        token: 'fake-jwt-token',
-        user: {
-          id: '1',
-          name: 'Administrador',
-          email: credentials.email,
-          role: 'admin',
-        },
-      };
-    }
-
-    throw new Error('E-mail ou senha inválidos');
+    const response = await api.post('/auth/login', credentials);
+    this.saveToken(response.data.token, credentials.remember ? true : false);
+    return response.data;
   },
 
   saveToken(token: string, remember: boolean) {
@@ -32,12 +21,14 @@ export const authService = {
   },
 
   getToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
+    return token;
   },
 
   logout() {
     localStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(TOKEN_KEY);
+    window.location.href = "/login";
   },
 
   isAuthenticated(): boolean {

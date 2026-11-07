@@ -1,0 +1,210 @@
+import { useState, type SubmitEvent, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Car, Mail } from "lucide-react";
+import { clientesService } from '@/features/clients/services/client.service';
+import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
+import { HeaderClient } from "../ClientCreate";
+import { useData } from "@/contexts/dataContext";
+import { Client } from "../../types/client";
+
+
+const ClientesEdit = () => {
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">('INACTIVE');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const context = useData();
+  const data = 'data' in context ? context.data : undefined;
+
+  const fetchClient = async () => {
+    // Adicione aqui a lógica para buscar os dados do cliente pelo ID
+    if (id) {
+
+      const clientData = await clientesService.getById(id);
+      console.log(clientData);
+      setNome(clientData?.data?.nome ?? '');
+      setEmail(clientData?.data?.email ?? '');
+      setEndereco(clientData?.data?.endereco ?? '');
+      setTelefone(clientData?.data?.telefone ?? '');
+      setCpf(clientData?.data?.cpf ?? '');
+      setStatus(clientData?.data?.status ?? 'INACTIVE');
+    }
+  };
+
+  useEffect(() => {
+    fetchClient();
+  }, []);
+
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Adicione aqui a lógica para enviar os dados do formulário
+    setLoading(true);
+    try {
+      let parteData: Client = { id: String(id), nome, email, telefone, cpf, status, imagem_path: '', endereco: 'Rua a, 123' };
+      if (data) {
+        console.log(`atualizando cliente:`, parteData);
+        await data.updateClient(parteData);
+      }
+      navigate("/clientes");
+    } catch (error) {
+      console.error(error);
+      setError("Ocorreu um erro ao atualizar o cliente.");
+    } finally {
+      setLoading(false);
+      setNome('');
+      setEmail('');
+      setEndereco('');
+      setTelefone('');
+      setCpf('');
+      setStatus('INACTIVE');
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <FormEditOrCreate handleSubmit={handleSubmit} error={error}>
+        <HeaderClient
+          handleBack={() => navigate("/clientes")}
+          textVoltar="Voltar para clientes"
+          textDetalhes="Detalhes do cliente"
+          textPreencha="preencha os dados do cliente."
+        />
+
+        {/* Marca */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+            Nome
+          </label>
+          <div className="relative">
+            <Car className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              id="name"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Nome do cliente"
+              className="w-full pl-10 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+            Email
+          </label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email do cliente"
+              className="w-full pl-10 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Telefone */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="telefone" className="block text-sm font-medium text-slate-700">
+            Telefone
+          </label>
+          <div className="relative">
+            <input
+              id="telefone"
+              type="text"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              placeholder="Telefone do cliente"
+              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Cpf */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="cpf" className="block text-sm font-medium text-slate-700">
+            Cpf
+          </label>
+          <div className="relative">
+            <input
+              id="cpf"
+              type="text"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              placeholder="Cpf do cliente"
+              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Endereço */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="endereco" className="block text-sm font-medium text-slate-700">
+            Endereço
+          </label>
+          <div className="relative">
+            <input
+              id="endereco"
+              type="text"
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              placeholder="Endereço do cliente"
+              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Status */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="status" className="block text-sm font-medium text-slate-700">
+            Status
+          </label>
+          <div className="relative">
+            <select
+              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as "ACTIVE" | "INACTIVE")}
+              className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
+              required
+              disabled={loading}
+            >
+              <option value="INACTIVE">Selecione o status</option>
+              <option value="ACTIVE">Disponível</option>
+              <option value="INACTIVE">Indisponível</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Botão */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-500 text-dark text-sm font-medium rounded-lg hover:bg-brand-700 focus:ring-2 focus:ring-brand-500/40 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+        >
+          Editar Cliente
+        </button>
+      </FormEditOrCreate>
+    </div>
+  );
+}
+
+export default ClientesEdit;

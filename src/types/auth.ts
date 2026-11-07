@@ -5,13 +5,18 @@ export interface LoginCredentials {
 }
 
 export interface User {
-  id: string;
-  name: string;
+  ativo: 1;
   email: string;
-  role: 'admin' | 'atendente' | 'gerente';
+  id: number;
+  imagem_path: string | null;
+  nome: string;
+  role: "ADMIN" | "ATENDENTE" | "GERENTE";
 }
 
 export interface AuthResponse {
-  token: string;
+  success: boolean;
+  data: {
+    token: string;
+  };
   user: User;
 }
