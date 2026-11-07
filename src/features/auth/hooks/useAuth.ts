@@ -13,8 +13,8 @@ export function useAuth() {
     setError(null);
 
     try {
-      const { token } = await authService.login(credentials);
-      authService.saveToken(token, !!credentials.remember);
+      const {data} = await authService.login(credentials);
+      authService.saveToken(data.token, !!credentials.remember);
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');

@@ -1,5 +1,6 @@
 
 import { useEffect, useMemo, useState } from "react";
+import { useData } from "../../../../contexts/dataContext";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 
@@ -7,30 +8,48 @@ import DataTable, {
   type Column,
 } from "../../../../shared/components/DataTable";
 
-import TableActions from "../../../../shared/components/TableActions";
 import StatusBadge from "../../../../shared/components/StatusBadge";
 import SearchInput from "../../../../shared/components/SearchInput";
 import TablePagination from "../../../../shared/components/TablePagination";
 
-import { clientService } from "../../services/clientService";
 import type { Client } from "../../types/client";
+import { HeaderClient } from "../ClientCreate";
+import { ConfirmModal } from "@/shared/components/ConfirmModal";
 
 const ClientList = () => {
   const navigate = useNavigate();
+  const context = useData();
+  const data = 'data' in context ? context.data : undefined;
 
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
   const pageSize = 10;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
-  // 1. Buscar clientes
+
+
   useEffect(() => {
     async function loadClients() {
       try {
-        const result = await clientService.getAll();
-        setClients(result);
+        if (data) {
+          setLoading(true);
+
+          const response = await data.listClient({
+            page: currentPage,
+            limit: pageSize,
+          });
+          setClients(response.data.items);
+          setTotalPages(response.data.pagination.pages);
+          setTotalItems(response.data.pagination.total);
+          setLoading(false);
+        }
+
+
       } catch (error) {
         console.error("Erro ao carregar clientes:", error);
       } finally {
@@ -39,12 +58,12 @@ const ClientList = () => {
     }
 
     loadClients();
-  }, []);
+  }, [currentPage, pageSize]);
 
   // 2. Definir as colunas
   const columns: Column<Client>[] = [
     {
-      accessor: "name",
+      accessor: "nome",
       header: "Nome",
     },
     {
@@ -52,7 +71,7 @@ const ClientList = () => {
       header: "E-mail",
     },
     {
-      accessor: "phone",
+      accessor: "telefone",
       header: "Telefone",
     },
     {
@@ -75,31 +94,6 @@ const ClientList = () => {
     },
   ];
 
-  // 3. Filtrar clientes
-  const filteredClients = useMemo(() => {
-    const term = search.toLowerCase().trim();
-
-    return clients.filter((client) =>
-      [
-        client.name,
-        client.email,
-        client.phone,
-        client.cpf,
-      ].some((value) => value.toLowerCase().includes(term))
-    );
-  }, [clients, search]);
-
-  // 4. Paginação
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredClients.length / pageSize)
-  );
-
-  const paginatedClients = filteredClients.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
   // 5. Ação: visualizar
   function handleView(client: Client) {
     navigate(`/clientes/${client.id}`);
@@ -112,14 +106,11 @@ const ClientList = () => {
 
   // 7. Ação: excluir
   async function handleDelete(client: Client) {
-    const confirmed = window.confirm(
-      `Deseja realmente excluir o cliente ${client.name}?`
-    );
-
-    if (!confirmed) return;
+    if (!clientToDelete) return;
 
     try {
-      await clientService.delete(client.id);
+      if (!data) return;
+      await data.deleteClient(client.id);
 
       // Atualiza o estado após a exclusão
       setClients((current) =>
@@ -141,14 +132,10 @@ const ClientList = () => {
     <div className="space-y-6">
       {/* Cabeçalho */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-800">
-            Clientes
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Gerencie os clientes cadastrados no sistema.
-          </p>
-        </div>
+        <HeaderClient
+          textVoltar="Gerencie os clientes cadastrados no sistema."
+          textDetalhes="Clientes"
+        />
 
         <button
           type="button"
@@ -156,7 +143,7 @@ const ClientList = () => {
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
         >
           <Plus size={18} />
-          Novo cliente
+          Novo cliente {clients.length}
         </button>
       </div>
 
@@ -172,21 +159,42 @@ const ClientList = () => {
         />
       </div>
 
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        title="Confirmar exclusão"
+        message={`Deseja realmente excluir o cliente ${clientToDelete?.nome}?`}
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        onConfirm={() => {
+          if (!clientToDelete) return;
+          handleDelete(clientToDelete);
+          setIsConfirmModalOpen(false);
+          setClientToDelete(null);
+        }}
+        onCancel={() => {
+          setIsConfirmModalOpen(false);
+          setClientToDelete(null);
+        }}
+      />
+
       {/* Tabela */}
       <DataTable
         columns={columns}
-        data={paginatedClients}
+        data={clients}
         getRowId={(client) => client.id}
         onView={handleView}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        onDelete={(client) => {
+          setClientToDelete(client);
+          setIsConfirmModalOpen(true);
+        }}
       />
 
       {/* Paginação */}
       <TablePagination
         currentPage={currentPage}
         totalPages={totalPages}
-        totalItems={filteredClients.length}
+        totalItems={totalItems}
         pageSize={pageSize}
         onPageChange={setCurrentPage}
       />

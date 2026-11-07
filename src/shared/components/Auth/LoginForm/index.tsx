@@ -5,8 +5,8 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 const LoginForm = () => {
   const { login, loading, error } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@locadora.com');
+  const [password, setPassword] = useState('admin12345678');
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

@@ -74,10 +74,10 @@ function DataTable<T>({
                       {column.render
                         ? column.render(row)
                         : String(
-                            (row as Record<string, unknown>)[
-                              String(column.accessor)
-                            ] ?? "-"
-                          )}
+                          (row as Record<string, unknown>)[
+                          String(column.accessor)
+                          ] ?? "-"
+                        )}
                     </td>
                   ))}
 

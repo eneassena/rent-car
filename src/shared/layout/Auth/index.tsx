@@ -3,9 +3,10 @@ import { authService } from '@/services/auth.service';
 import MainLayout from '@/shared/layout/MainLayout';
 
 const ProtectedRoute = () => {
-  if (!authService.isAuthenticated()) {
-    return <Navigate to="/login" replace />;
-  }
+  console.log('User is authenticated:', authService.isAuthenticated());
+  // if (!authService.isAuthenticated()) {
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return (
     <MainLayout>

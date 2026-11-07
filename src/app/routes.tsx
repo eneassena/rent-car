@@ -1,11 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-
+// Rotas de autenticação e páginas padrão
 import Dashboard from "@/features/dashboard/pages/Dashboard";
 import Login from "@/features/auth/pages/Login";
 import NotFound from "@/features/pages-default/not-found/NotFound";
 import ProtectedRoute from "@/shared/layout/Auth";
-
 
 
 // Rotas de clientes
@@ -50,10 +49,10 @@ const AppRoutes = () => (
             <Route path="/veiculos/novo" element={<VehiclesCreate />} />
 
             {/* Rotas de clientes */}
-            <Route path="/clientes" element={<ClientList />} /> {/* Lista de clientes */}
-            <Route path="/clientes/:id" element={<ClientDetails />} /> {/* Detalhes do cliente */}
-            <Route path="/clientes/:id/editar" element={<ClientEdit />} /> {/* Editar cliente */}
-            <Route path="/clientes/novo" element={<ClientCreate />} /> {/* Criar novo cliente */}
+            <Route path="/clientes" element={<ClientList />} />
+            <Route path="/clientes/:id" element={<ClientDetails />} />
+            <Route path="/clientes/:id/editar" element={<ClientEdit />} />
+            <Route path="/clientes/novo" element={<ClientCreate />} />
 
             {/* Rotas de locações */}
             <Route path="/locacoes" element={<RentalsList />} />

@@ -1,0 +1,462 @@
+{
+  "brand": "RentCar",
+  "description": "Imagens geradas por IA para dados demonstrativos do dashboard.",
+  "images": {
+    "clients": [
+      {
+        "id": 1,
+        "src": "/images/clients/client-01.jpg",
+        "alt": "Foto ilustrativa de cliente 1"
+      },
+      {
+        "id": 2,
+        "src": "/images/clients/client-02.jpg",
+        "alt": "Foto ilustrativa de cliente 2"
+      },
+      {
+        "id": 3,
+        "src": "/images/clients/client-03.jpg",
+        "alt": "Foto ilustrativa de cliente 3"
+      },
+      {
+        "id": 4,
+        "src": "/images/clients/client-04.jpg",
+        "alt": "Foto ilustrativa de cliente 4"
+      },
+      {
+        "id": 5,
+        "src": "/images/clients/client-05.jpg",
+        "alt": "Foto ilustrativa de cliente 5"
+      },
+      {
+        "id": 6,
+        "src": "/images/clients/client-06.jpg",
+        "alt": "Foto ilustrativa de cliente 6"
+      },
+      {
+        "id": 7,
+        "src": "/images/clients/client-07.jpg",
+        "alt": "Foto ilustrativa de cliente 7"
+      },
+      {
+        "id": 8,
+        "src": "/images/clients/client-08.jpg",
+        "alt": "Foto ilustrativa de cliente 8"
+      },
+      {
+        "id": 9,
+        "src": "/images/clients/client-09.jpg",
+        "alt": "Foto ilustrativa de cliente 9"
+      },
+      {
+        "id": 10,
+        "src": "/images/clients/client-10.jpg",
+        "alt": "Foto ilustrativa de cliente 10"
+      },
+      {
+        "id": 11,
+        "src": "/images/clients/client-11.jpg",
+        "alt": "Foto ilustrativa de cliente 11"
+      },
+      {
+        "id": 12,
+        "src": "/images/clients/client-12.jpg",
+        "alt": "Foto ilustrativa de cliente 12"
+      },
+      {
+        "id": 13,
+        "src": "/images/clients/client-13.jpg",
+        "alt": "Foto ilustrativa de cliente 13"
+      },
+      {
+        "id": 14,
+        "src": "/images/clients/client-14.jpg",
+        "alt": "Foto ilustrativa de cliente 14"
+      },
+      {
+        "id": 15,
+        "src": "/images/clients/client-15.jpg",
+        "alt": "Foto ilustrativa de cliente 15"
+      },
+      {
+        "id": 16,
+        "src": "/images/clients/client-16.jpg",
+        "alt": "Foto ilustrativa de cliente 16"
+      },
+      {
+        "id": 17,
+        "src": "/images/clients/client-17.jpg",
+        "alt": "Foto ilustrativa de cliente 17"
+      },
+      {
+        "id": 18,
+        "src": "/images/clients/client-18.jpg",
+        "alt": "Foto ilustrativa de cliente 18"
+      },
+      {
+        "id": 19,
+        "src": "/images/clients/client-19.jpg",
+        "alt": "Foto ilustrativa de cliente 19"
+      },
+      {
+        "id": 20,
+        "src": "/images/clients/client-20.jpg",
+        "alt": "Foto ilustrativa de cliente 20"
+      },
+      {
+        "id": 21,
+        "src": "/images/clients/client-21.jpg",
+        "alt": "Foto ilustrativa de cliente 21"
+      },
+      {
+        "id": 22,
+        "src": "/images/clients/client-22.jpg",
+        "alt": "Foto ilustrativa de cliente 22"
+      },
+      {
+        "id": 23,
+        "src": "/images/clients/client-23.jpg",
+        "alt": "Foto ilustrativa de cliente 23"
+      },
+      {
+        "id": 24,
+        "src": "/images/clients/client-24.jpg",
+        "alt": "Foto ilustrativa de cliente 24"
+      },
+      {
+        "id": 25,
+        "src": "/images/clients/client-25.jpg",
+        "alt": "Foto ilustrativa de cliente 25"
+      },
+      {
+        "id": 26,
+        "src": "/images/clients/client-26.jpg",
+        "alt": "Foto ilustrativa de cliente 26"
+      },
+      {
+        "id": 27,
+        "src": "/images/clients/client-27.jpg",
+        "alt": "Foto ilustrativa de cliente 27"
+      },
+      {
+        "id": 28,
+        "src": "/images/clients/client-28.jpg",
+        "alt": "Foto ilustrativa de cliente 28"
+      },
+      {
+        "id": 29,
+        "src": "/images/clients/client-29.jpg",
+        "alt": "Foto ilustrativa de cliente 29"
+      },
+      {
+        "id": 30,
+        "src": "/images/clients/client-30.jpg",
+        "alt": "Foto ilustrativa de cliente 30"
+      }
+    ],
+    "vehicles": [
+      {
+        "id": 1,
+        "src": "/images/vehicles/vehicle-01.jpg",
+        "alt": "Foto ilustrativa de veículo 1"
+      },
+      {
+        "id": 2,
+        "src": "/images/vehicles/vehicle-02.jpg",
+        "alt": "Foto ilustrativa de veículo 2"
+      },
+      {
+        "id": 3,
+        "src": "/images/vehicles/vehicle-03.jpg",
+        "alt": "Foto ilustrativa de veículo 3"
+      },
+      {
+        "id": 4,
+        "src": "/images/vehicles/vehicle-04.jpg",
+        "alt": "Foto ilustrativa de veículo 4"
+      },
+      {
+        "id": 5,
+        "src": "/images/vehicles/vehicle-05.jpg",
+        "alt": "Foto ilustrativa de veículo 5"
+      },
+      {
+        "id": 6,
+        "src": "/images/vehicles/vehicle-06.jpg",
+        "alt": "Foto ilustrativa de veículo 6"
+      },
+      {
+        "id": 7,
+        "src": "/images/vehicles/vehicle-07.jpg",
+        "alt": "Foto ilustrativa de veículo 7"
+      },
+      {
+        "id": 8,
+        "src": "/images/vehicles/vehicle-08.jpg",
+        "alt": "Foto ilustrativa de veículo 8"
+      },
+      {
+        "id": 9,
+        "src": "/images/vehicles/vehicle-09.jpg",
+        "alt": "Foto ilustrativa de veículo 9"
+      },
+      {
+        "id": 10,
+        "src": "/images/vehicles/vehicle-10.jpg",
+        "alt": "Foto ilustrativa de veículo 10"
+      },
+      {
+        "id": 11,
+        "src": "/images/vehicles/vehicle-11.jpg",
+        "alt": "Foto ilustrativa de veículo 11"
+      },
+      {
+        "id": 12,
+        "src": "/images/vehicles/vehicle-12.jpg",
+        "alt": "Foto ilustrativa de veículo 12"
+      },
+      {
+        "id": 13,
+        "src": "/images/vehicles/vehicle-13.jpg",
+        "alt": "Foto ilustrativa de veículo 13"
+      },
+      {
+        "id": 14,
+        "src": "/images/vehicles/vehicle-14.jpg",
+        "alt": "Foto ilustrativa de veículo 14"
+      },
+      {
+        "id": 15,
+        "src": "/images/vehicles/vehicle-15.jpg",
+        "alt": "Foto ilustrativa de veículo 15"
+      },
+      {
+        "id": 16,
+        "src": "/images/vehicles/vehicle-16.jpg",
+        "alt": "Foto ilustrativa de veículo 16"
+      },
+      {
+        "id": 17,
+        "src": "/images/vehicles/vehicle-17.jpg",
+        "alt": "Foto ilustrativa de veículo 17"
+      },
+      {
+        "id": 18,
+        "src": "/images/vehicles/vehicle-18.jpg",
+        "alt": "Foto ilustrativa de veículo 18"
+      },
+      {
+        "id": 19,
+        "src": "/images/vehicles/vehicle-19.jpg",
+        "alt": "Foto ilustrativa de veículo 19"
+      },
+      {
+        "id": 20,
+        "src": "/images/vehicles/vehicle-20.jpg",
+        "alt": "Foto ilustrativa de veículo 20"
+      },
+      {
+        "id": 21,
+        "src": "/images/vehicles/vehicle-21.jpg",
+        "alt": "Foto ilustrativa de veículo 21"
+      },
+      {
+        "id": 22,
+        "src": "/images/vehicles/vehicle-22.jpg",
+        "alt": "Foto ilustrativa de veículo 22"
+      },
+      {
+        "id": 23,
+        "src": "/images/vehicles/vehicle-23.jpg",
+        "alt": "Foto ilustrativa de veículo 23"
+      },
+      {
+        "id": 24,
+        "src": "/images/vehicles/vehicle-24.jpg",
+        "alt": "Foto ilustrativa de veículo 24"
+      },
+      {
+        "id": 25,
+        "src": "/images/vehicles/vehicle-25.jpg",
+        "alt": "Foto ilustrativa de veículo 25"
+      },
+      {
+        "id": 26,
+        "src": "/images/vehicles/vehicle-26.jpg",
+        "alt": "Foto ilustrativa de veículo 26"
+      },
+      {
+        "id": 27,
+        "src": "/images/vehicles/vehicle-27.jpg",
+        "alt": "Foto ilustrativa de veículo 27"
+      },
+      {
+        "id": 28,
+        "src": "/images/vehicles/vehicle-28.jpg",
+        "alt": "Foto ilustrativa de veículo 28"
+      },
+      {
+        "id": 29,
+        "src": "/images/vehicles/vehicle-29.jpg",
+        "alt": "Foto ilustrativa de veículo 29"
+      },
+      {
+        "id": 30,
+        "src": "/images/vehicles/vehicle-30.jpg",
+        "alt": "Foto ilustrativa de veículo 30"
+      }
+    ],
+    "rentals": [
+      {
+        "id": 1,
+        "src": "/images/rentals/rental-01.jpg",
+        "alt": "Imagem ilustrativa de locação 1"
+      },
+      {
+        "id": 2,
+        "src": "/images/rentals/rental-02.jpg",
+        "alt": "Imagem ilustrativa de locação 2"
+      },
+      {
+        "id": 3,
+        "src": "/images/rentals/rental-03.jpg",
+        "alt": "Imagem ilustrativa de locação 3"
+      },
+      {
+        "id": 4,
+        "src": "/images/rentals/rental-04.jpg",
+        "alt": "Imagem ilustrativa de locação 4"
+      },
+      {
+        "id": 5,
+        "src": "/images/rentals/rental-05.jpg",
+        "alt": "Imagem ilustrativa de locação 5"
+      },
+      {
+        "id": 6,
+        "src": "/images/rentals/rental-06.jpg",
+        "alt": "Imagem ilustrativa de locação 6"
+      },
+      {
+        "id": 7,
+        "src": "/images/rentals/rental-07.jpg",
+        "alt": "Imagem ilustrativa de locação 7"
+      },
+      {
+        "id": 8,
+        "src": "/images/rentals/rental-08.jpg",
+        "alt": "Imagem ilustrativa de locação 8"
+      },
+      {
+        "id": 9,
+        "src": "/images/rentals/rental-09.jpg",
+        "alt": "Imagem ilustrativa de locação 9"
+      },
+      {
+        "id": 10,
+        "src": "/images/rentals/rental-10.jpg",
+        "alt": "Imagem ilustrativa de locação 10"
+      },
+      {
+        "id": 11,
+        "src": "/images/rentals/rental-11.jpg",
+        "alt": "Imagem ilustrativa de locação 11"
+      },
+      {
+        "id": 12,
+        "src": "/images/rentals/rental-12.jpg",
+        "alt": "Imagem ilustrativa de locação 12"
+      },
+      {
+        "id": 13,
+        "src": "/images/rentals/rental-13.jpg",
+        "alt": "Imagem ilustrativa de locação 13"
+      },
+      {
+        "id": 14,
+        "src": "/images/rentals/rental-14.jpg",
+        "alt": "Imagem ilustrativa de locação 14"
+      },
+      {
+        "id": 15,
+        "src": "/images/rentals/rental-15.jpg",
+        "alt": "Imagem ilustrativa de locação 15"
+      },
+      {
+        "id": 16,
+        "src": "/images/rentals/rental-16.jpg",
+        "alt": "Imagem ilustrativa de locação 16"
+      },
+      {
+        "id": 17,
+        "src": "/images/rentals/rental-17.jpg",
+        "alt": "Imagem ilustrativa de locação 17"
+      },
+      {
+        "id": 18,
+        "src": "/images/rentals/rental-18.jpg",
+        "alt": "Imagem ilustrativa de locação 18"
+      },
+      {
+        "id": 19,
+        "src": "/images/rentals/rental-19.jpg",
+        "alt": "Imagem ilustrativa de locação 19"
+      },
+      {
+        "id": 20,
+        "src": "/images/rentals/rental-20.jpg",
+        "alt": "Imagem ilustrativa de locação 20"
+      },
+      {
+        "id": 21,
+        "src": "/images/rentals/rental-21.jpg",
+        "alt": "Imagem ilustrativa de locação 21"
+      },
+      {
+        "id": 22,
+        "src": "/images/rentals/rental-22.jpg",
+        "alt": "Imagem ilustrativa de locação 22"
+      },
+      {
+        "id": 23,
+        "src": "/images/rentals/rental-23.jpg",
+        "alt": "Imagem ilustrativa de locação 23"
+      },
+      {
+        "id": 24,
+        "src": "/images/rentals/rental-24.jpg",
+        "alt": "Imagem ilustrativa de locação 24"
+      },
+      {
+        "id": 25,
+        "src": "/images/rentals/rental-25.jpg",
+        "alt": "Imagem ilustrativa de locação 25"
+      },
+      {
+        "id": 26,
+        "src": "/images/rentals/rental-26.jpg",
+        "alt": "Imagem ilustrativa de locação 26"
+      },
+      {
+        "id": 27,
+        "src": "/images/rentals/rental-27.jpg",
+        "alt": "Imagem ilustrativa de locação 27"
+      },
+      {
+        "id": 28,
+        "src": "/images/rentals/rental-28.jpg",
+        "alt": "Imagem ilustrativa de locação 28"
+      },
+      {
+        "id": 29,
+        "src": "/images/rentals/rental-29.jpg",
+        "alt": "Imagem ilustrativa de locação 29"
+      },
+      {
+        "id": 30,
+        "src": "/images/rentals/rental-30.jpg",
+        "alt": "Imagem ilustrativa de locação 30"
+      }
+    ]
+  }
+}

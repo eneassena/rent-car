@@ -178,3 +178,38 @@ shared/
 
 ```
 
+
+#### Feature de metricas no dashboard
+```
+src/
+│
+├── contexts/
+│   └── DashboardContext/
+│       ├── index.tsx
+│       └── types.ts
+│
+├── features/
+│   └── dashboard/
+│       ├── pages/
+│       │   └── Dashboard/
+│       │       ├── index.tsx
+│       │       └── style.css
+│       │
+│       ├── components/
+│       │   └── MetricCard/
+│       │       ├── index.tsx
+│       │       └── style.css
+│       │
+│       ├── services/
+│       │   └── dashboardService.ts
+│       │
+│       └── types/
+│           └── dashboard.ts
+│
+├── services/
+│   ├── clientService.ts
+│   ├── vehicleService.ts
+│   └── rentalService.ts
+│
+└── App.tsx
+```
