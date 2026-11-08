@@ -8,11 +8,15 @@ function removeFileByPublicPath(publicPath) {
   const root = path.resolve(process.cwd(), "uploads");
   const target = path.resolve(root, relative);
   if (!target.startsWith(root + path.sep)) return;
-  try { if (fs.existsSync(target)) fs.unlinkSync(target); } catch (err) {
+  try {
+    if (fs.existsSync(target)) fs.unlinkSync(target);
+  } catch (err) {
     console.error("Não foi possível remover arquivo:", err.message);
   }
 }
 function publicImagePath(file) {
-  return file ? `/uploads/${path.basename(path.dirname(file.path))}/${file.filename}` : null;
+  return file
+    ? `/uploads/${path.basename(path.dirname(file.path))}/${file.filename}`
+    : null;
 }
 module.exports = { removeFileByPublicPath, publicImagePath };

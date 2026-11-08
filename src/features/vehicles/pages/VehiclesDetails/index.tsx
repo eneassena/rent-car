@@ -1,62 +1,52 @@
+import type {
+    Vehicle,
+} from "@/features/vehicles/types/vehicles";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Vehicle } from "../../types/vehicles";
-import { vehiclesServices } from "../../services/vehicles.service";
 import {
     CarFront,
     Factory,
     CalendarDays,
     RectangleEllipsis,
-    Truck,
     CircleCheck,
-    ArrowLeft,
-    Pencil,
 } from "lucide-react";
 import StatusBadge from "@/shared/components/StatusBadge";
 import HeaderPage from "../../components/HeaderPage";
+import { VehicleImage } from "@/shared/components/VehicleImage";
+import { useData } from "@/contexts/dataContext";
 
 const VehiclesDetails = () => {
-    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-
+    const { id } = useParams<{ id: string }>();
     const [vehicle, setVehicle] = useState<Vehicle | null>(null);
     const [loading, setLoading] = useState(true);
+    const context = useData();
+    const data = 'data' in context ? context.data : null;
 
-    useEffect(() => {
-        let active = true;
-
-        async function loadVehicle() {
-            try {
-                if (!id) {
-                    setVehicle(null);
-                    return;
-                }
-
-                const vehicleData = await vehiclesServices.getById(id);
-
-                if (active) {
-                    setVehicle(vehicleData ?? null);
-                }
-            } catch (error) {
-                console.error("Erro ao buscar veículo:", error);
-
-                if (active) {
-                    setVehicle(null);
-                }
-            } finally {
-                if (active) {
-                    setLoading(false);
-                }
+    async function loadVehicle() {
+        try {
+            if (!id) {
+                setVehicle(null);
+                return;
             }
+            setLoading(true);
+            const vehicleData = await data?.detailVehicle(Number(id));
+            if (vehicleData) {
+                setVehicle(vehicleData ?? null);
+                console.log(vehicleData.imagem_path);
+            }
+        } catch (error) {
+            console.error("Erro ao buscar veículo:", error);
+            setVehicle(null);
+        } finally {
+
+            setLoading(false);
+
         }
-
-        setLoading(true);
+    }
+    useEffect(() => {
         loadVehicle();
-
-        return () => {
-            active = false;
-        };
-    }, [id]);
+    }, []);
 
     const handleEdit = () => {
         if (vehicle) {
@@ -100,12 +90,14 @@ const VehiclesDetails = () => {
         );
     }
 
-    // Available
-    // Unavailable
     const status =
-        vehicle.status === "ACTIVE"
-            ? { label: "Ativo", variant: "success" as const }
-            : { label: "Inativo", variant: "neutral" as const };
+        vehicle.status === "DISPONIVEL"
+            ? { label: "Disponível", variant: "success" as const }
+            : vehicle.status === "LOCADO"
+                ? { label: "Locado", variant: "warning" as const }
+                : vehicle.status === "MANUTENCAO"
+                    ? { label: "Manutenção", variant: "danger" as const }
+                    : { label: "Inativo", variant: "neutral" as const };
 
     return (
         <div className="space-y-6">
@@ -124,31 +116,11 @@ const VehiclesDetails = () => {
             {/* Identificação */}
             <div className="rounded-xl border p-6 border-slate-200 bg-white shadow-sm">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                        {/* <CarFront size={28} /> */}
-                        <div className="w-full bg-gray-100 rounded-xl overflow-hidden">
-
-                            <img
-                                src={vehicle.image}
-                                alt={vehicle.modelo}
-                                onError={(event) => {
-                                    event.currentTarget.src = "/images/placeholder.png";
-                                }}
-                                className="h-full w-full object-contain"
-                            />
-                        </div>
-                        {/* <img
-                            src={vehicle.image}
-                            alt={vehicle.modelo}
-                            className="h-150 w-100 rounded-full object-cover"
-                        /> */}
-                        {/* <div>
-                            <img
-                                src={vehicle.image}
-                                alt={vehicle.modelo}
-                                className="w-full h-full object-cover"
-                            />
-                        </div> */}
+                    <div className="flex h-40 w-64 flex-none items-center justify-center overflow-hidden rounded-xl bg-slate-100">
+                        <VehicleImage
+                            src={vehicle.imagem_path}
+                            alt={`${vehicle.marca} ${vehicle.modelo}`}
+                        />
                     </div>
 
                     <div className="flex-1">
@@ -217,7 +189,7 @@ const VehiclesDetails = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-start gap-3">
+                    {/* <div className="flex items-start gap-3">
                         <Truck size={19} className="mt-0.5 text-slate-400" />
 
                         <div>
@@ -228,7 +200,7 @@ const VehiclesDetails = () => {
                                 {vehicle.categoria}
                             </p>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="flex items-start gap-3">
                         <CircleCheck size={19} className="mt-0.5 text-slate-400" />

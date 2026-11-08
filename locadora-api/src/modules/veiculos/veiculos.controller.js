@@ -38,12 +38,17 @@ function availability(req, res, next) {
 }
 function create(req, res, next) {
   try {
-    res
-      .status(201)
-      .json({
-        success: true,
-        data: s.create(req.body, publicImagePath(req.file)),
-      });
+    console.log(`Request body: ${JSON.stringify(req.body)}`);
+    console.log(`Request file: ${JSON.stringify(req.file)}`);
+    const imagemPath = req.file
+      ? `/uploads/veiculos/${req.file.filename}`
+      : null;
+
+    console.log("IMAGE PATH:", imagemPath);
+    res.status(201).json({
+      success: true,
+      data: s.create(req.body, publicImagePath(req.file)),
+    });
   } catch (e) {
     if (req.file) fs.unlink(req.file.path, () => {});
     next(e);

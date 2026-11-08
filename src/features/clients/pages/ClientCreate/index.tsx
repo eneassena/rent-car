@@ -1,36 +1,55 @@
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Car, Mail, Pencil } from "lucide-react";
+import { ArrowLeft, Car, Mail } from "lucide-react";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
+import ImageUpload from "@/features/vehicles/components/ImageUpload";
+import { CreateClientDTO } from "../../types/client";
+import {clientesService} from '../../services/client.service';
+
 
 const ClientCreate = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [status, setStatus] = useState('');
+  const [nome, setNome] = useState<string>('teste teste');
+  const [cpf, setCpf] = useState<string>('86687687687');
+  const [telefone, setTelefone] = useState<string>('67576576576');
+  const [email, setEmail] = useState<string>('teste@rentcar.com');
+  const [endereco, setEndereco] = useState<string>('iytfgkhjgkjh');
+  const [observacoes, setObservacoes] = useState<string | null>(null);
+  const [imagem, setImagem] = useState<File | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // context
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Adicione aqui a lógica para enviar os dados do formulário
     setLoading(true);
     try {
-      console.log({ nome, email, telefone, cpf, status });
-      // await clientService.create({ nome, email, telefone, cpf, status });
-      // navigate("/clientes");
+
+      const clientData: CreateClientDTO = {
+        nome,
+        cpf,
+        telefone,
+        email,
+        endereco,
+        observacoes,
+        imagem
+      };
+      await clientesService.create(clientData);
+      navigate("/clientes");
     } catch (error) {
       // console.error(error);
       setError("Ocorreu um erro ao criar o cliente.");
     } finally {
       setLoading(false);
       setNome('');
-      setEmail('');
-      setTelefone('');
       setCpf('');
-      setStatus('');
+      setTelefone('');
+      setEmail('');
+      setEndereco('');
+      setObservacoes(null);
+      setImagem(null);
     }
   };
 
@@ -127,26 +146,30 @@ const ClientCreate = () => {
           </div>
         </div>
 
-        {/* Status */}
+        {/* Endereço */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="status" className="block text-sm font-medium text-slate-700">
-            Status
+          <label htmlFor="endereco" className="block text-sm font-medium text-slate-700">
+            Endereço
           </label>
           <div className="relative">
-            <select
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+            <input
+              id="endereco"
+              type="text"
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              placeholder="Endereço do cliente"
               className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
-            >
-              <option value="">Selecione o status</option>
-              <option value="ACTIVE">Disponível</option>
-              <option value="INACTIVE">Indisponível</option>
-            </select>
+            />
           </div>
         </div>
+
+
+        <ImageUpload
+          value={imagem}
+          onChange={setImagem}
+        />
 
         {/* Botão */}
         <button

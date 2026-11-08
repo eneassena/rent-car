@@ -1,9 +1,7 @@
 import type { LoginCredentials, AuthResponse } from '@/types/auth';
-import api from './api.service';
-
+import api from '@/services/api.service';
 
 const TOKEN_KEY = 'rentcar.token';
-
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {

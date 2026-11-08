@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../../../services/auth.service';
+import { authService } from '@/features/auth/services/auth.service';
 import type { LoginCredentials } from '@/types/auth';
 
 export function useAuth() {

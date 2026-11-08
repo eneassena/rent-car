@@ -1,4 +1,3 @@
-import vehiclesData from '@/data/mocks/vehicles.json';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { useData } from '@/contexts/dataContext';
@@ -16,31 +15,33 @@ import { ConfirmModal } from '@/shared/components/ConfirmModal';
 
 const VehiclesList = () => {
     const navigate = useNavigate();
-
-    const [vehicles, setVehicles] = useState<Vehicle[]>(vehiclesData as Vehicle[]);
+    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
     const context = useData();
     const data = 'data' in context ? context.data : null;
 
     const pageSize = 10;
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+
+    async function loadVehicles() {
+        try {
+
+            setLoading(true); 
+            await data?.listVehicle().then((res) => setVehicles(res));
+        } catch (error) {
+            console.error("Erro ao carregar clientes:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     // 1. Buscar clientes
     useEffect(() => {
-        async function loadVehicles() {
-            try {
-
-                await data?.listVehicle().then((res) => setVehicles(res));
-            } catch (error) {
-                console.error("Erro ao carregar clientes:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
         loadVehicles();
     }, [data]);
 
@@ -62,12 +63,12 @@ const VehiclesList = () => {
             accessor: "placa",
             header: "Placa",
         },
-        {
-            accessor: "categoria",
-            header: "Categoria",
+           {
+            accessor: "cor",
+            header: "Cor",
         },
         {
-            accessor: "diaria",
+            accessor: "valor_diaria",
             header: "Diaria",
         },
         {
@@ -96,17 +97,14 @@ const VehiclesList = () => {
                 client.marca,
                 client.ano,
                 client.placa,
-                client.categoria,
-                client.diaria,
+                client.cor,
+                client.status,
+                client.valor_diaria,
             ].some((value) => String(value).toLowerCase().includes(term))
         );
     }, [vehicles, search]);
 
-    // 4. Paginação
-    const totalPages = Math.max(
-        1,
-        Math.ceil(filteredVehicles.length / pageSize)
-    );
+
 
     const paginatedVehicles = filteredVehicles.slice(
         (currentPage - 1) * pageSize,
