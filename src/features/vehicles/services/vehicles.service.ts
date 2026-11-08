@@ -4,11 +4,7 @@ import type {
   UpdateVehicleDTO,
   Vehicle,
 } from "@/features/vehicles/types/vehicles";
-
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
+import { PaginatedResponse } from "@/features/clients/services/client.service";
 
 export const vehiclesServices = {
   async create(vehicle: CreateVehicleDTO): Promise<Vehicle> {
@@ -29,28 +25,17 @@ export const vehiclesServices = {
       formData.append("imagem", vehicle.imagem);
     }
     
-    const response = await api.post<ApiResponse<Vehicle>>(
-      "/veiculos",
-      formData,
-      {
-        headers: {
-          "Content-Type": undefined,
-        },
-      },
-    );
+    const response = await api.post("/veiculos",formData);
 
     return response.data.data;
   },
 
-  async list(): Promise<Vehicle[]> {
-    const response =
-      await api.get<ApiResponse<{ items: Vehicle[] }>>("/veiculos");
-
-    return response.data.data.items;
+  async list(): Promise<PaginatedResponse<Vehicle>> {
+    const response = await api.get("/veiculos");
+    return response.data.data;
   },
-
   async getById(id: number): Promise<Vehicle> {
-    const response = await api.get<ApiResponse<Vehicle>>(`/veiculos/${id}`);
+    const response = await api.get(`/veiculos/${id}`);
 
     return response.data.data;
   },
@@ -68,13 +53,17 @@ export const vehiclesServices = {
       formData.append("observacoes", vehicle.observacoes);
     }
 
-    if (vehicle.imagem) {
+    if (vehicle.imagem instanceof File) {
       formData.append("imagem", vehicle.imagem);
     }
-    const response = await api.put<ApiResponse<Vehicle>>(
-      `/veiculos/${id}`,
-      formData,
-    );
+
+    console.log("FormData enviado:");
+
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    const response = await api.put(`/veiculos/${id}`, formData);
 
     return response.data.data;
   },

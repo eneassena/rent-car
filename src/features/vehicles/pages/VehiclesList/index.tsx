@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
-import { useData } from '@/contexts/dataContext';
 import { Vehicle } from '../../types/vehicles';
 
 
@@ -12,27 +11,31 @@ import SearchInput from '@/shared/components/SearchInput';
 import TablePagination from '@/shared/components/TablePagination';
 import { Plus } from 'lucide-react';
 import { ConfirmModal } from '@/shared/components/ConfirmModal';
+import { Pagination } from '@/types/globals';
+import { vehiclesServices } from '../../services/vehicles.service';
+
 
 const VehiclesList = () => {
     const navigate = useNavigate();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [search, setSearch] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
-    const context = useData();
-    const data = 'data' in context ? context.data : null;
-
-    const pageSize = 10;
-    const [totalPages, setTotalPages] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        limit: 10,
+        total: 0,
+        pages: 0,
+    });
 
     async function loadVehicles() {
         try {
 
-            setLoading(true); 
-            await data?.listVehicle().then((res) => setVehicles(res));
+            setLoading(true);
+            const response = await vehiclesServices.list();
+            setVehicles(response.items);
+            setPagination(response.pagination);
         } catch (error) {
             console.error("Erro ao carregar clientes:", error);
         } finally {
@@ -43,7 +46,7 @@ const VehiclesList = () => {
     // 1. Buscar clientes
     useEffect(() => {
         loadVehicles();
-    }, [data]);
+    }, []);
 
     // 2. Definir as colunas
     const columns: Column<Vehicle>[] = [
@@ -63,7 +66,7 @@ const VehiclesList = () => {
             accessor: "placa",
             header: "Placa",
         },
-           {
+        {
             accessor: "cor",
             header: "Cor",
         },
@@ -106,10 +109,10 @@ const VehiclesList = () => {
 
 
 
-    const paginatedVehicles = filteredVehicles.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    );
+    // const paginatedVehicles = filteredVehicles.slice(
+    //     (currentPage - 1) * pageSize,
+    //     currentPage * pageSize
+    // );
 
     // 5. Ação: visualizar
     function handleView(vehicle: Vehicle) {
@@ -126,17 +129,14 @@ const VehiclesList = () => {
         if (!vehicleToDelete) return;
 
         try {
-            await data?.deleteVehicle(vehicle.id).catch((error) => {
-                console.error("Erro ao excluir veículo:", error);
-                throw error;
-            });
-            navigate('/veiculos');
+            await vehiclesServices.delete(vehicle.id);
+            navigate('/veiculos', { replace: true });
             // Atualiza o estado após a exclusão
             setVehicles((current) =>
                 current.filter((item) => item.id !== vehicle.id)
             );
 
-            setCurrentPage(1);
+            setPagination((current) => ({ ...current, page: 1 }));
         } catch (error) {
             console.error("Erro ao excluir veículo:", error);
             alert("Não foi possível excluir o veículo.");
@@ -182,7 +182,7 @@ const VehiclesList = () => {
                     value={search}
                     onChange={(value) => {
                         setSearch(value);
-                        setCurrentPage(1);
+                        setPagination((current) => ({ ...current, page: 1 }));
                     }}
                     placeholder="Buscar por modelo, placa ou ano..."
                 />
@@ -209,7 +209,7 @@ const VehiclesList = () => {
             {/* Tabela */}
             <DataTable
                 columns={columns}
-                data={paginatedVehicles}
+                data={vehicles}
                 getRowId={(vehicle) => vehicle.id}
                 onView={handleView}
                 onEdit={handleEdit}
@@ -218,11 +218,11 @@ const VehiclesList = () => {
 
             {/* Paginação */}
             <TablePagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredVehicles.length}
-                pageSize={pageSize}
-                onPageChange={setCurrentPage}
+                currentPage={pagination.page}
+                totalPages={pagination.pages}
+                totalItems={pagination.total}
+                pageSize={pagination.limit}
+                onPageChange={(page) => setPagination((current) => ({ ...current, page }))}
             />
         </div>
     );

@@ -40,13 +40,14 @@ export const clientesService = {
     const token =
       localStorage.getItem("rentcar.token") ||
       sessionStorage.getItem("rentcar.token");
+
     const response = await api.get("/clientes", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
       params,
     });
-    // console.log(response.data.data);
+    console.log(response.data);
     return response.data.data;
   },
 
@@ -80,9 +81,6 @@ export const clientesService = {
   },
 
   async update(id: number, client: UpdateClientDTO): Promise<Client> {
-    console.log(
-      `[clienteService.update] FormData before sending:${JSON.stringify(client)} - updated ${id}`,
-    );
     const response = await api.put(`/clientes/${id}`, client);
     return response.data.data;
   },

@@ -7,6 +7,7 @@ import { useData } from '@/contexts/dataContext';
 import ImageUpload from "@/features/vehicles/components/ImageUpload";
 import { listCores } from '../VehiclesEdit';
 import HeaderPage from '../../components/HeaderPage';
+import { vehiclesServices } from "../../services/vehicles.service";
 
 
 const VehiclesCreate = () => {
@@ -19,8 +20,6 @@ const VehiclesCreate = () => {
     const [imagem, setImagem] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const context = useData();
-    const data = 'data' in context ? context.data : undefined;
     const navigation = useNavigate();
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -28,19 +27,22 @@ const VehiclesCreate = () => {
         // Adicione aqui a lógica para enviar os dados do formulário
         setLoading(true);
         try {
-            if (data) {
-                // Supondo que você tenha uma função para criar veículo na api
-                const newVehicle: CreateVehicleDTO = {
-                    marca,
-                    modelo,
-                    placa,
-                    ano: Number(ano),
-                    cor,
-                    valor_diaria: valorDiaria,
-                    imagem
-                };
-                await data.createVehicle(newVehicle)
-            }
+            // Supondo que você tenha uma função para criar veículo na api
+            const newVehicle: CreateVehicleDTO = {
+                marca,
+                modelo,
+                placa,
+                ano: Number(ano),
+                cor,
+                valor_diaria: valorDiaria,
+                imagem
+            };
+            await vehiclesServices.create(newVehicle)
+            navigation('/veiculos', { replace: true });
+        } catch (error) {
+            console.error(error);
+            setError('Ocorreu um erro ao enviar o formulário.');
+        } finally {
             setError('');
             setMarca('');
             setModelo('');
@@ -49,11 +51,6 @@ const VehiclesCreate = () => {
             setCor('');
             setValorDiaria(0);
             setImagem(null);
-            navigation('/veiculos', { replace: true });
-        } catch (error) {
-            console.error(error);
-            setError('Ocorreu um erro ao enviar o formulário.');
-        } finally {
             setLoading(false);
         }
     };
@@ -71,7 +68,6 @@ const VehiclesCreate = () => {
                     textDetalhes="Detalhes do veículo"
                     textPreencha="Preencha os detalhes do veículo"
                 />
-
 
                 {/* Marca */}
                 <div className="flex flex-col gap-1.5">

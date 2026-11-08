@@ -6,6 +6,7 @@ import { ApiDataResponse, clientesService } from '@/features/clients/services/cl
 
 import type { Client, DetailsClientDTO } from "../../types/client";
 import { HeaderClient } from "../ClientCreate";
+import { getImageUrl } from "@/shared/utils/imagemUrl";
 
 function ClientDetails() {
   const { id } = useParams<{ id: string }>();
@@ -110,7 +111,7 @@ function ClientDetails() {
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
             {/* <UserRound size={28} /> */}
             <img
-              src={client.imagem_path ? client.imagem_path : "/images/clients/client-01.jpg"}
+              src={client.imagem_path ? getImageUrl(client.imagem_path) : "/images/clients/client-01.jpg"}
               alt={client.nome}
               className="h-15 w-15 rounded-full object-cover"
             />

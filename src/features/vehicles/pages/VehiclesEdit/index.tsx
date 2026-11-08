@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { vehiclesServices } from "../../services/vehicles.service";
 import HeaderPage from "../../components/HeaderPage";
 import { UpdateVehicleDTO } from "../../types/vehicles";
-import { useData } from "@/contexts/dataContext";
+
 
 export const listCores = [
     "preto",
@@ -29,8 +29,6 @@ const VehiclesEdit = () => {
     const [vehicle, setVehicle] = useState<UpdateVehicleDTO | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const context = useData();
-    const data = "data" in context ? context.data : null;
 
     useEffect(() => {
         fetchVeiculo();
@@ -39,12 +37,12 @@ const VehiclesEdit = () => {
     const fetchVeiculo = async () => {
         // Adicione aqui a lógica para buscar os dados do veículo pelo ID
         if (id) {
-            const veiculoData = await data?.detailVehicle(Number(id));
-            if (!veiculoData) {
+            const response = await vehiclesServices.getById(Number(id));
+            if (!response) {
                 setError("Veículo não encontrado.");
                 return;
             }
-            setVehicle(veiculoData);
+            setVehicle(response);
         }
     };
 

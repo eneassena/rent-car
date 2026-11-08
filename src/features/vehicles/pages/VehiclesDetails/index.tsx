@@ -14,14 +14,14 @@ import StatusBadge from "@/shared/components/StatusBadge";
 import HeaderPage from "../../components/HeaderPage";
 import { VehicleImage } from "@/shared/components/VehicleImage";
 import { useData } from "@/contexts/dataContext";
+import { vehiclesServices } from "../../services/vehicles.service";
 
 const VehiclesDetails = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [vehicle, setVehicle] = useState<Vehicle | null>(null);
     const [loading, setLoading] = useState(true);
-    const context = useData();
-    const data = 'data' in context ? context.data : null;
+
 
     async function loadVehicle() {
         try {
@@ -30,10 +30,10 @@ const VehiclesDetails = () => {
                 return;
             }
             setLoading(true);
-            const vehicleData = await data?.detailVehicle(Number(id));
-            if (vehicleData) {
-                setVehicle(vehicleData ?? null);
-                console.log(vehicleData.imagem_path);
+            const response = await vehiclesServices.getById(Number(id));
+            if (response) {
+                setVehicle(response);
+                console.log(response.imagem_path);
             }
         } catch (error) {
             console.error("Erro ao buscar veículo:", error);
@@ -44,6 +44,7 @@ const VehiclesDetails = () => {
 
         }
     }
+    
     useEffect(() => {
         loadVehicle();
     }, []);
