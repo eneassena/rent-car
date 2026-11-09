@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
@@ -32,6 +31,10 @@ const ClientList = () => {
     total: 0,
     pages: 0,
   });
+
+  function handleNewClient() {
+    navigate("/clientes/novo");
+  }
 
 
   async function loadClients() {
@@ -118,7 +121,7 @@ const ClientList = () => {
 
         <button
           type="button"
-          onClick={() => navigate("/clientes/novo")}
+          onClick={handleNewClient}
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
         >
           <Plus size={18} />

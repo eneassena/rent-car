@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Rental from "../../types/types";
-import rentalsService from '../../services/rentalsService';
+import rentalsService from '../../services/rentals.service';
 import HeaderPage from "@/features/vehicles/components/HeaderPage";
 import { CalendarDays, CarFront, Factory, Truck } from "lucide-react";
 
@@ -10,29 +10,29 @@ const RentalsDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    const [vehicle, setVehicle] = useState<Rental | null>(null);
+    const [rental, setRental] = useState<Rental | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let active = true;
 
-        async function loadVehicle() {
+        async function loadRental() {
             try {
                 if (!id) {
-                    setVehicle(null);
+                    setRental(null);
                     return;
                 }
 
-                const vehicleData = await rentalsService.getRentalById(id);
+                const rentalData = await rentalsService.byId(Number(id));
 
                 if (active) {
-                    setVehicle(vehicleData ?? null);
+                    setRental(rentalData ?? null);
                 }
             } catch (error) {
-                console.error("Erro ao buscar veículo:", error);
+                console.error("Erro ao buscar locação:", error);
 
                 if (active) {
-                    setVehicle(null);
+                    setRental(null);
                 }
             } finally {
                 if (active) {
@@ -42,7 +42,7 @@ const RentalsDetails = () => {
         }
 
         setLoading(true);
-        loadVehicle();
+        loadRental();
 
         return () => {
             active = false;
@@ -50,8 +50,8 @@ const RentalsDetails = () => {
     }, [id]);
 
     const handleEdit = () => {
-        if (vehicle) {
-            navigate(`/locacoes/${vehicle.id}/editar`);
+        if (rental) {
+            navigate(`/locacoes/${rental.id}/editar`);
         }
     };
 
@@ -62,22 +62,22 @@ const RentalsDetails = () => {
     if (loading) {
         return (
             <div className="flex min-h-64 items-center justify-center">
-                <p className="text-sm text-slate-500">Carregando dados do veículo...</p>
+                <p className="text-sm text-slate-500">Carregando dados da locação...</p>
             </div>
         );
     }
 
-    if (!vehicle) {
+    if (!rental) {
         return (
             <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-16 shadow-sm">
                 <CarFront size={40} className="mb-3 text-slate-300" />
 
                 <h2 className="text-lg font-semibold text-slate-800">
-                    Veículo não encontrado
+                    Locação não encontrada
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                    Não foi possível localizar os dados deste veículo.
+                    Não foi possível localizar os dados desta locação.
                 </p>
 
                 <button
@@ -85,7 +85,7 @@ const RentalsDetails = () => {
                     onClick={handleBack}
                     className="mt-5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
                 >
-                    Voltar para veículos
+                    Voltar para locações
                 </button>
             </div>
         );
@@ -108,25 +108,25 @@ const RentalsDetails = () => {
             {/* Identificação */}
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                      
+                    {/* <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+
                         <img
-                            src={vehicle.image || "/images/placeholder.png"}
-                            alt={vehicle.veiculo}
+                            src={rental.veiculo.image || "/images/placeholder.png"}
+                            alt={rental.veiculo.veiculo}
                             onError={(event) => {
                                 event.currentTarget.src = "/images/placeholder.png";
                             }}
                             className="h-full w-full object-cover"
                         />
-                    </div>
+                    </div> */}
 
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold text-slate-800">
-                            {vehicle.veiculo}
+                            {rental.veiculo_id}
                         </h2>
 
                         <p className="mt-1 text-sm text-slate-500">
-                            Veículo #{vehicle.id}
+                            Veículo #{rental.veiculo_id}
                         </p>
                     </div>
 
@@ -154,33 +154,7 @@ const RentalsDetails = () => {
                                 Cliente
                             </p>
                             <p className="mt-1 text-sm font-medium text-slate-700">
-                                {vehicle.cliente}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                        <CalendarDays size={19} className="mt-0.5 text-slate-400" />
-
-                        <div>
-                            <p className="text-xs font-medium uppercase text-slate-400">
-                                Data de Inicio
-                            </p>
-                            <p className="mt-1 text-sm font-medium text-slate-700">
-                                {vehicle.data_inicio}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                        <CalendarDays size={19} className="mt-0.5 text-slate-400" />
-
-                        <div>
-                            <p className="text-xs font-medium uppercase text-slate-400">
-                                Data de Fim
-                            </p>
-                            <p className="mt-1 text-sm font-medium text-slate-700">
-                                {vehicle.data_fim}
+                                {rental.cliente_id}
                             </p>
                         </div>
                     </div>
@@ -190,10 +164,100 @@ const RentalsDetails = () => {
 
                         <div>
                             <p className="text-xs font-medium uppercase text-slate-400">
-                                Valor
+                                Modalidade
                             </p>
                             <p className="mt-1 text-sm font-medium text-slate-700">
-                                {vehicle.valor}
+                                {rental.modalidade}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <CalendarDays size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Data de Retirada
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.data_retirada}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <CalendarDays size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Data de Devolução
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.data_devolucao}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <Truck size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Valor Diária
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.valor_diaria}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <Truck size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Valor Fechado
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.valor_fechado}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <Truck size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Valor Total
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.valor_total}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                        <Truck size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Status
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.status}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                        <Truck size={19} className="mt-0.5 text-slate-400" />
+
+                        <div>
+                            <p className="text-xs font-medium uppercase text-slate-400">
+                                Observações
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-slate-700">
+                                {rental.observacoes}
                             </p>
                         </div>
                     </div>

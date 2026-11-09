@@ -1,16 +1,6 @@
 import api from "@/services/api.service";
 import type { Client, CreateClientDTO, UpdateClientDTO } from "../types/client";
 
-// export interface DataItems {
-//   items: Client[];
-//   pagination: {
-//     page: number;
-//     limit: number;
-//     total: number;
-//     pages: number;
-//   };
-// }
-
 export interface Pagination {
   page: number;
   limit: number;
@@ -47,7 +37,6 @@ export const clientesService = {
       },
       params,
     });
-    console.log(response.data);
     return response.data.data;
   },
 

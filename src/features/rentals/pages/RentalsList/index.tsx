@@ -9,90 +9,92 @@ import DataTable, {
 import SearchInput from '@/shared/components/SearchInput';
 import TablePagination from '@/shared/components/TablePagination';
 import { Plus } from 'lucide-react';
-import { useData } from '@/contexts/dataContext';
 import { ConfirmModal } from '@/shared/components/ConfirmModal';
+import rentalsServices, { RentalParams } from '@/features/rentals/services/rentals.service';
+import { Pagination } from '@/types/globals';
 
 const RentalsList = () => {
-    const context = useData();
-    const data = 'data' in context ? context.data : undefined;
-
     const navigate = useNavigate();
     const [rentals, setRentals] = useState<Rental[]>([]);
     const [search, setSearch] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
 
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [rentalToDelete, setRentalToDelete] = useState<Rental | null>(null);
+    const [pagination, setPagination] = useState<Pagination>({
+        page: 1,
+        limit: 10,
+        total: 0,
+        pages: 0,
+    });
 
-    const pageSize = 10;
+    async function loadRentals() {
+        try {
+            const param: RentalParams = {
+                page: pagination.page,
+                limit: pagination.limit,
+            };
+            const response = await rentalsServices.list(param);
+            console.log(`Response from rentalsServices.list:`, response.items);
+            setRentals(response.items);
+            setPagination(response.pagination);
+            // const response = await rentalsServices.list(param);
+            // console.log(`Response from rentalsServices.list:`, response.items);
+            // setRentals(response.items);
+            // setPagination(response.pagination);
+        } catch (error) {
+            console.error("Erro ao carregar clientes:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     // 1. Buscar clientes
     useEffect(() => {
-        async function loadVehicles() {
-            try {
-                if (data?.rentals) {
-                    data.rentals.then(rentals => rentals && setRentals(rentals));
-                }
-            } catch (error) {
-                console.error("Erro ao carregar clientes:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        loadVehicles();
-    }, [data]);
+        loadRentals();
+    }, []);
 
     // 2. Definir as colunas
     const columns: Column<Rental>[] = [
         {
-            accessor: "veiculo",
-            header: "Veiculo",
-        },
-        {
-            accessor: "cliente",
+            accessor: "cliente_nome",
             header: "Cliente",
         },
         {
-            accessor: "data_inicio",
+            accessor: "veiculo_placa",
+            header: "Veiculo",
+        },
+        {
+            accessor: "data_retirada",
             header: "Data Início",
         },
         {
-            accessor: "data_fim",
+            accessor: "data_devolucao",
             header: "Data Fim",
         },
         {
-            accessor: "valor",
-            header: "Valor",
+            accessor: "valor_diaria",
+            header: "Valor Diária",
+        },
+        {
+            accessor: "valor_fechado",
+            header: "Valor Fechado",
+        },
+        {
+            accessor: "valor_total",
+            header: "Valor Total",
+        },
+        {
+            accessor: "modalidade",
+            header: "Modalidade",
+        },
+        {
+            accessor: "status",
+            header: "Status",
         },
     ];
 
-    // 3. Filtrar clientes
-    const filteredRentals = useMemo(() => {
-        const term = search.toLowerCase().trim();
 
-        return rentals.filter((rental) =>
-            [
-                rental.veiculo,
-                rental.cliente,
-                rental.data_inicio,
-                rental.data_fim,
-                rental.valor,
-            ].some((value) => value.toString().toLowerCase().includes(term))
-        );
-    }, [rentals, search]);
-
-    // 4. Paginação
-    const totalPages = Math.max(
-        1,
-        Math.ceil(filteredRentals.length / pageSize)
-    );
-
-    const paginatedRentals = filteredRentals.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    );
 
     // 5. Ação: visualizar
     function handleView(rental: Rental) {
@@ -109,17 +111,14 @@ const RentalsList = () => {
         if (!rentalToDelete) return;
 
         try {
-            await data?.deleteRental(rental.id).catch((error) => {
-                console.error("Erro ao excluir locação:", error);
-                throw error;
-            });
+            await rentalsServices.delete(Number(rental.id));
             navigate('/locacoes');
             // Atualiza o estado após a exclusão
             setRentals((current) =>
                 current.filter((item) => item.id !== rental.id)
             );
 
-            setCurrentPage(1);
+            setPagination((current) => ({ ...current, page: 1 }));
         } catch (error) {
             console.error("Erro ao excluir locação:", error);
             alert("Não foi possível excluir a locação.");
@@ -165,7 +164,7 @@ const RentalsList = () => {
                     value={search}
                     onChange={(value) => {
                         setSearch(value);
-                        setCurrentPage(1);
+                        setPagination((current) => ({ ...current, page: 1 }));
                     }}
                     placeholder="Buscar por modelo, placa ou ano..."
                 />
@@ -192,7 +191,7 @@ const RentalsList = () => {
             {/* Tabela */}
             <DataTable
                 columns={columns}
-                data={paginatedRentals}
+                data={rentals}
                 getRowId={(rental) => rental.id}
                 onView={handleView}
                 onEdit={handleEdit}
@@ -201,12 +200,13 @@ const RentalsList = () => {
 
             {/* Paginação */}
             <TablePagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredRentals.length}
-                pageSize={pageSize}
-                onPageChange={setCurrentPage}
+                currentPage={pagination.page}
+                totalPages={pagination.pages}
+                totalItems={pagination.total}
+                pageSize={pagination.limit}
+                onPageChange={(page) => setPagination((current) => ({ ...current, page }))}
             />
+
         </div>
     );
 };

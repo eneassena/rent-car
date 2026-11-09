@@ -90,30 +90,6 @@ const VehiclesList = () => {
         },
     ];
 
-    // 3. Filtrar clientes
-    const filteredVehicles = useMemo(() => {
-        const term = search.toLowerCase().trim();
-
-        return vehicles.filter((client) =>
-            [
-                client.modelo,
-                client.marca,
-                client.ano,
-                client.placa,
-                client.cor,
-                client.status,
-                client.valor_diaria,
-            ].some((value) => String(value).toLowerCase().includes(term))
-        );
-    }, [vehicles, search]);
-
-
-
-    // const paginatedVehicles = filteredVehicles.slice(
-    //     (currentPage - 1) * pageSize,
-    //     currentPage * pageSize
-    // );
-
     // 5. Ação: visualizar
     function handleView(vehicle: Vehicle) {
         navigate(`/veiculos/${vehicle.id}`);

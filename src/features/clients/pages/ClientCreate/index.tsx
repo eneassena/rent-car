@@ -9,7 +9,7 @@ import {clientesService} from '../../services/client.service';
 
 const ClientCreate = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState<string>('teste teste');
+  const [nome, setNome] = useState<string>('');
   const [cpf, setCpf] = useState<string>('86687687687');
   const [telefone, setTelefone] = useState<string>('67576576576');
   const [email, setEmail] = useState<string>('teste@rentcar.com');
