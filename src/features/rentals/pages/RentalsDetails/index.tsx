@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Rental from "../../types/types";
-import rentalsService from '../../services/rentals.service';
+import {
+    CalendarDays,
+    CarFront,
+    Factory,
+    Truck
+} from "lucide-react";
+import Rental from "@/features/rentals/types/types";
+import rentalsService from "@/features/rentals/services/rentals.service";
 import HeaderPage from "@/features/vehicles/components/HeaderPage";
-import { CalendarDays, CarFront, Factory, Truck } from "lucide-react";
 
 
 const RentalsDetails = () => {
@@ -22,9 +27,8 @@ const RentalsDetails = () => {
                     setRental(null);
                     return;
                 }
-
+                setLoading(true);
                 const rentalData = await rentalsService.byId(Number(id));
-
                 if (active) {
                     setRental(rentalData ?? null);
                 }
@@ -40,8 +44,6 @@ const RentalsDetails = () => {
                 }
             }
         }
-
-        setLoading(true);
         loadRental();
 
         return () => {
@@ -108,18 +110,6 @@ const RentalsDetails = () => {
             {/* Identificação */}
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    {/* <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-
-                        <img
-                            src={rental.veiculo.image || "/images/placeholder.png"}
-                            alt={rental.veiculo.veiculo}
-                            onError={(event) => {
-                                event.currentTarget.src = "/images/placeholder.png";
-                            }}
-                            className="h-full w-full object-cover"
-                        />
-                    </div> */}
-
                     <div className="flex-1">
                         <h2 className="text-lg font-semibold text-slate-800">
                             {rental.veiculo_id}

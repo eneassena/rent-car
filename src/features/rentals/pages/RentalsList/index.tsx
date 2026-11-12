@@ -1,14 +1,14 @@
 
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
-import Rental from '../../types/types';
+import { Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import Rental from '@/features/rentals/types/types';
 
 import DataTable, {
     type Column,
-} from "../../../../shared/components/DataTable";
+} from "@/shared/components/DataTable";
 import SearchInput from '@/shared/components/SearchInput';
 import TablePagination from '@/shared/components/TablePagination';
-import { Plus } from 'lucide-react';
 import { ConfirmModal } from '@/shared/components/ConfirmModal';
 import rentalsServices, { RentalParams } from '@/features/rentals/services/rentals.service';
 import { Pagination } from '@/types/globals';
@@ -38,10 +38,6 @@ const RentalsList = () => {
             console.log(`Response from rentalsServices.list:`, response.items);
             setRentals(response.items);
             setPagination(response.pagination);
-            // const response = await rentalsServices.list(param);
-            // console.log(`Response from rentalsServices.list:`, response.items);
-            // setRentals(response.items);
-            // setPagination(response.pagination);
         } catch (error) {
             console.error("Erro ao carregar clientes:", error);
         } finally {
@@ -94,8 +90,6 @@ const RentalsList = () => {
         },
     ];
 
-
-
     // 5. Ação: visualizar
     function handleView(rental: Rental) {
         navigate(`/locacoes/${rental.id}`);
@@ -121,7 +115,6 @@ const RentalsList = () => {
             setPagination((current) => ({ ...current, page: 1 }));
         } catch (error) {
             console.error("Erro ao excluir locação:", error);
-            alert("Não foi possível excluir a locação.");
         }
     }
 

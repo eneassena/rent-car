@@ -1,8 +1,8 @@
 import { useState, type SubmitEvent, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
-import { HeaderClient } from "../ClientCreate";
-import { Client } from "../../types/client";
+import HeaderClient from "@/features/clients/components/HeaderClient";
+import { Client } from "@/features/clients/types/client";
 import { clientesService } from '@/features/clients/services/client.service';
 
 

@@ -26,7 +26,6 @@ function DataTable<T>({
   onDelete,
 }: DataTableProps<T>) {
   const hasActions = Boolean(onView || onEdit || onDelete);
-  console.log(`hasActions:`, hasActions);
 
   return (
     <div className="w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">

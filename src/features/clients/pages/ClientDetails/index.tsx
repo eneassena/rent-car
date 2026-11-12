@@ -2,20 +2,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Pencil, UserRound, Mail, Phone, CreditCard } from "lucide-react";
-import { ApiDataResponse, clientesService } from '@/features/clients/services/client.service';
 
-import type { Client, DetailsClientDTO } from "../../types/client";
-import { HeaderClient } from "../ClientCreate";
+
+import { clientesService } from '@/features/clients/services/client.service';
+import type { Client } from "@/features/clients/types/client";
+import HeaderClient from "@/features/clients/components/HeaderClient";
 import { getImageUrl } from "@/shared/utils/imagemUrl";
 
-function ClientDetails() {
+
+const ClientDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const [client, setClient] = useState<Client>({} as Client);
   const [loading, setLoading] = useState(true);
 
-  async function loadClient() {
+  const loadClient = async () => {
     try {
       if (!id) {
         setClient({} as Client);
@@ -24,7 +25,6 @@ function ClientDetails() {
       setLoading(true);
       const clientDataFromContext = await clientesService.detailById(Number(id));
       if (clientDataFromContext) {
-        console.log(`Fetched client data:`, clientDataFromContext);
         setClient(clientDataFromContext);
         return;
       }

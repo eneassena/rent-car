@@ -1,28 +1,29 @@
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Car, Mail } from "lucide-react";
+import { Car, Mail } from "lucide-react";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
 import ImageUpload from "@/features/vehicles/components/ImageUpload";
-import { CreateClientDTO } from "../../types/client";
-import {clientesService} from '../../services/client.service';
+import { CreateClientDTO } from "@/features/clients/types/client";
+import { clientesService } from '@/features/clients/services/client.service';
+import HeaderClient from "@/features/clients/components/HeaderClient";
 
 
 const ClientCreate = () => {
   const navigate = useNavigate();
   const [nome, setNome] = useState<string>('');
-  const [cpf, setCpf] = useState<string>('86687687687');
-  const [telefone, setTelefone] = useState<string>('67576576576');
-  const [email, setEmail] = useState<string>('teste@rentcar.com');
-  const [endereco, setEndereco] = useState<string>('iytfgkhjgkjh');
+  const [cpf, setCpf] = useState<string>('');
+  const [telefone, setTelefone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [endereco, setEndereco] = useState<string>('');
   const [observacoes, setObservacoes] = useState<string | null>(null);
   const [imagem, setImagem] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // context
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     // Adicione aqui a lógica para enviar os dados do formulário
     setLoading(true);
     try {
@@ -37,9 +38,8 @@ const ClientCreate = () => {
         imagem
       };
       await clientesService.create(clientData);
-      navigate("/clientes");
+      navigate("/clientes", { replace: true });
     } catch (error) {
-      // console.error(error);
       setError("Ocorreu um erro ao criar o cliente.");
     } finally {
       setLoading(false);
@@ -184,44 +184,6 @@ const ClientCreate = () => {
   );
 }
 
-export type HeaderClientType = {
-  handleBack?: () => void;
-  textVoltar: string;
-  textDetalhes: string;
-  textPreencha?: string;
-};
-export const HeaderClient = ({ handleBack, textVoltar, textDetalhes, textPreencha }: HeaderClientType) => {
-  return (
-    <div>
-      {handleBack && (
-        <button
-          type="button"
-          onClick={handleBack}
-          className="mb-3 flex items-center gap-2 text-sm text-slate-500 transition hover:text-slate-800"
-        >
-          <ArrowLeft size={17} />
-          {textVoltar}
-        </button>
-      )}
 
-      {!handleBack && textVoltar && (
-        <p className="mb-3 text-sm text-slate-500">
-          {textVoltar}
-        </p>
-      )}
-
-      <h1 className="text-2xl font-semibold text-slate-800">
-        {textDetalhes}
-      </h1>
-
-      {textPreencha && (
-        <p className="mt-1 text-sm text-slate-500">
-          {textPreencha}
-        </p>
-      )}
-
-    </div>
-  );
-}
 
 export default ClientCreate;

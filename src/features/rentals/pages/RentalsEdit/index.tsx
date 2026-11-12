@@ -1,9 +1,9 @@
 import FormEditOrCreate from "@/shared/components/Forms/FormEditOrCreate";
 import { useState, useEffect, type SubmitEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { HeaderClient } from "@/features/clients/pages/ClientCreate";
+import HeaderClient from "@/features/clients/components/HeaderClient";
 import { Car, Mail } from "lucide-react";
-import Rental, { RentalModalidade, RentalStatus, UpdateRentalDTO } from "../../types/types";
+import { RentalModalidade, UpdateRentalDTO } from "@/features/rentals/types/types";
 import rentalsServices from '@/features/rentals/services/rentals.service';
 
 
@@ -14,7 +14,7 @@ const RentalsEdit = () => {
     const [error, setError] = useState<string | null>(null);
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const listStatus: RentalStatus[] = ["ATIVA", "FINALIZADA", "CANCELADA"];
+    // const listStatus: RentalStatus[] = ["ATIVA", "FINALIZADA", "CANCELADA"];
     const listModalidade: RentalModalidade[] = ["DIARIA", "PERIODO"];
 
     const fetchClient = async () => {

@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
-import { CreateRentalDTO } from "@/features/rentals/types/types";
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { CreateRentalDTO } from "@/features/rentals/types/types";
 import rentalsService from '@/features/rentals/services/rentals.service';
 import FormEditOrCreate from "@/shared/components/Forms/FormEditOrCreate";
 import { RentalModalidade } from "@/features/rentals/types/types";
@@ -16,12 +16,11 @@ const RentalsCreate = () => {
     const [valorFechado, setValorFechado] = useState(0);
     const [valorTotal, setValorTotal] = useState(0);
     const [observacoes, setObservacoes] = useState("");
+    const listModalidade: RentalModalidade[] = ["DIARIA", "PERIODO"];
     const [modalidade, setModalidade] = useState<string>("DIARIA");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const listModalidade: RentalModalidade[] = ["DIARIA", "PERIODO"];
-
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();

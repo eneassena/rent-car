@@ -13,7 +13,6 @@ import {
 import StatusBadge from "@/shared/components/StatusBadge";
 import HeaderPage from "../../components/HeaderPage";
 import { VehicleImage } from "@/shared/components/VehicleImage";
-import { useData } from "@/contexts/dataContext";
 import { vehiclesServices } from "../../services/vehicles.service";
 
 const VehiclesDetails = () => {

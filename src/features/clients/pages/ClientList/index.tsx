@@ -4,27 +4,21 @@ import { Plus } from "lucide-react";
 
 import DataTable, {
   type Column,
-} from "../../../../shared/components/DataTable";
-
-import SearchInput from "../../../../shared/components/SearchInput";
-import TablePagination from "../../../../shared/components/TablePagination";
-
-import type { Client } from "../../types/client";
-import { HeaderClient } from "../ClientCreate";
+} from "@/shared/components/DataTable";
+import SearchInput from "@/shared/components/SearchInput";
+import TablePagination from "@/shared/components/TablePagination";
+import type { Client } from "@/features/clients/types/client";
+import HeaderClient from "@/features/clients/components/HeaderClient";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
-
 import { clientesService, Pagination } from '@/features/clients/services/client.service';
 
 const ClientList = () => {
   const navigate = useNavigate();
-
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
-
-
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     limit: 10,
@@ -35,7 +29,6 @@ const ClientList = () => {
   function handleNewClient() {
     navigate("/clientes/novo");
   }
-
 
   async function loadClients() {
     try {
@@ -125,7 +118,7 @@ const ClientList = () => {
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
         >
           <Plus size={18} />
-          Novo cliente {clients.length}
+          Novo cliente
         </button>
       </div>
 

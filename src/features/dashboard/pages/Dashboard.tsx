@@ -1,10 +1,11 @@
-import { DashboardOverview } from "@/types/dashboard";
-import { Users, CarFront, ClipboardList, DollarSign, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
-import dashboardService from "@/services/dadhboard.service";
+import { Users, CarFront, ClipboardList, DollarSign, TrendingUp } from "lucide-react";
 
 
- 
+import { DashboardOverview } from "@/features/dashboard/types";
+import dashboardService from "@/features/dashboard/services/dadhboard.service";
+import ItemContentDashboard from "@/features/dashboard/components/ItemContentDashboard";
+
 
 export default function Dashboard() {
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
@@ -197,10 +198,3 @@ export default function Dashboard() {
   );
 }
 
-const ItemContentDashboard = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-slate-100">
-      {children}
-    </div>
-  );
-};

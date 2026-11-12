@@ -9,12 +9,4 @@ export interface PaginatedResponse<T> {
   items: T[];
   pagination: Pagination;
 }
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
-
-export interface ApiDataResponse<T> {
-  data: T;
-}
+ 

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Car } from "lucide-react";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
 import { useParams } from "react-router-dom";
-import { vehiclesServices } from "../../services/vehicles.service";
-import HeaderPage from "../../components/HeaderPage";
-import { UpdateVehicleDTO } from "../../types/vehicles";
+import { vehiclesServices } from "@/features/vehicles/services/vehicles.service";
+import HeaderPage from "@/features/vehicles/components/HeaderPage";
+import { UpdateVehicleDTO } from "@/features/vehicles/types/vehicles";
 
 
 export const listCores = [

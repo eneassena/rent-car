@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Car } from 'lucide-react'
 import { FormEditOrCreate } from '@/shared/components/Forms/FormEditOrCreate';
 import { CreateVehicleDTO } from '../../types/vehicles';
-import { useData } from '@/contexts/dataContext';
 import ImageUpload from "@/features/vehicles/components/ImageUpload";
 import { listCores } from '../VehiclesEdit';
 import HeaderPage from '../../components/HeaderPage';
