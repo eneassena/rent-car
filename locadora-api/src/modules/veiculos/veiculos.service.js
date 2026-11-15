@@ -32,6 +32,7 @@ function get(id) {
   return v;
 }
 function create(d, img) {
+  console.log(`Create data: ${JSON.stringify(d)}, image: ${img}`);
   const r = db
     .prepare(
       `INSERT INTO veiculos(placa,marca,modelo,ano,cor,valor_diaria,status,observacoes,imagem_path)

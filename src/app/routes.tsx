@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Rotas de autenticação e páginas padrão
 import Dashboard from "@/features/dashboard/pages/Dashboard";
 import Login from "@/features/auth/pages/Login";
-import NotFound from "@/features/pages-default/not-found/NotFound";
+import NotFound from "@/features/pages-default/pages/NotFound";
 import ProtectedRoute from "@/shared/layout/Auth";
 
 

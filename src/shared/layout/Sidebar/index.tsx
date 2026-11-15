@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Car as CarIcon, LogOut } from 'lucide-react';
 import { menuItems } from './sidebarConfig';
 import type { SidebarProps } from '@/types/layout';
-import { authService } from '@/services/auth.service';
+import { authService } from '@/features/auth/services/auth.service';
 
 const Sidebar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }: SidebarProps) => {
     const navigate = useNavigate();

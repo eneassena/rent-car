@@ -2,61 +2,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Pencil, UserRound, Mail, Phone, CreditCard } from "lucide-react";
-import { useData } from "@/contexts/dataContext";
 
-import type { Client } from "../../types/client";
-import StatusBadge from "../../../../shared/components/StatusBadge";
-import { HeaderClient } from "../ClientCreate";
 
-function ClientDetails() {
+import { clientesService } from '@/features/clients/services/client.service';
+import type { Client } from "@/features/clients/types/client";
+import HeaderClient from "@/features/clients/components/HeaderClient";
+import { getImageUrl } from "@/shared/utils/imagemUrl";
+
+
+const ClientDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const context = useData();
-  const data = 'data' in context ? context.data : undefined;
-
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<Client>({} as Client);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // let active = true;
-
-    async function loadClient() {
-      try {
-        if (!id) {
-          setClient(null);
-          return;
-        }
-
-        if (data) {
-          const clientDataFromContext = await data.detailClient(id);
-          if (clientDataFromContext) {
-            if (clientDataFromContext.success) {
-              setClient(clientDataFromContext.data);
-            }
-            return;
-          }
-
-        }
-        // const clientData = await clientService.getById(id);
-
-        // if (active) {
-        //   setClient(clientData ?? null);
-        // }
-      } catch (error) {
-        console.error("Erro ao buscar cliente:", error);
-
-        setClient(null);
-      } finally {
-        setLoading(false);
+  const loadClient = async () => {
+    try {
+      if (!id) {
+        setClient({} as Client);
+        return;
       }
+      setLoading(true);
+      const clientDataFromContext = await clientesService.detailById(Number(id));
+      if (clientDataFromContext) {
+        setClient(clientDataFromContext);
+        return;
+      }
+      setClient({} as Client);
+    } catch (error) {
+      console.error("Erro ao buscar cliente:", error);
+      setClient({} as Client);
+    } finally {
+      setLoading(false);
     }
+  }
+  useEffect(() => {
 
-    setLoading(true);
     loadClient();
 
-    return () => {
-      // active = false;
-    };
   }, []);
 
   const handleEdit = () => {
@@ -101,10 +84,6 @@ function ClientDetails() {
     );
   }
 
-  const status = client.status === "ACTIVE"
-    ? { label: "Ativo", variant: "success" as const }
-    : { label: "Inativo", variant: "neutral" as const };
-
   return (
     <div className="space-y-6">
       {/* Cabeçalho */}
@@ -132,18 +111,10 @@ function ClientDetails() {
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600">
             {/* <UserRound size={28} /> */}
             <img
-              src={client.imagem_path ? client.imagem_path : "/images/clients/client-01.jpg"}
+              src={client.imagem_path ? getImageUrl(client.imagem_path) : "/images/clients/client-01.jpg"}
               alt={client.nome}
               className="h-15 w-15 rounded-full object-cover"
             />
-            {/* <img
-              src={client.image || "/images/placeholder.png"}
-              alt={client.name}
-              onError={(event) => {
-                event.currentTarget.src = "/images/placeholder.png";
-              }}
-              className="h-full w-full object-cover"
-            /> */}
           </div>
 
           <div className="flex-1">
@@ -155,8 +126,6 @@ function ClientDetails() {
               Cliente #{client.id}
             </p>
           </div>
-
-          <StatusBadge label={status.label} variant={status.variant} />
         </div>
       </div>
 

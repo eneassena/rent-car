@@ -1,36 +1,55 @@
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Car, Mail, Pencil } from "lucide-react";
+import { Car, Mail } from "lucide-react";
 import { FormEditOrCreate } from "@/shared/components/Forms/FormEditOrCreate";
+import ImageUpload from "@/features/vehicles/components/ImageUpload";
+import { CreateClientDTO } from "@/features/clients/types/client";
+import { clientesService } from '@/features/clients/services/client.service';
+import HeaderClient from "@/features/clients/components/HeaderClient";
+
 
 const ClientCreate = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [status, setStatus] = useState('');
+  const [nome, setNome] = useState<string>('');
+  const [cpf, setCpf] = useState<string>('');
+  const [telefone, setTelefone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [endereco, setEndereco] = useState<string>('');
+  const [observacoes, setObservacoes] = useState<string | null>(null);
+  const [imagem, setImagem] = useState<File | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     // Adicione aqui a lógica para enviar os dados do formulário
     setLoading(true);
     try {
-      console.log({ nome, email, telefone, cpf, status });
-      // await clientService.create({ nome, email, telefone, cpf, status });
-      // navigate("/clientes");
+
+      const clientData: CreateClientDTO = {
+        nome,
+        cpf,
+        telefone,
+        email,
+        endereco,
+        observacoes,
+        imagem
+      };
+      await clientesService.create(clientData);
+      navigate("/clientes", { replace: true });
     } catch (error) {
-      // console.error(error);
       setError("Ocorreu um erro ao criar o cliente.");
     } finally {
       setLoading(false);
       setNome('');
-      setEmail('');
-      setTelefone('');
       setCpf('');
-      setStatus('');
+      setTelefone('');
+      setEmail('');
+      setEndereco('');
+      setObservacoes(null);
+      setImagem(null);
     }
   };
 
@@ -127,26 +146,30 @@ const ClientCreate = () => {
           </div>
         </div>
 
-        {/* Status */}
+        {/* Endereço */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="status" className="block text-sm font-medium text-slate-700">
-            Status
+          <label htmlFor="endereco" className="block text-sm font-medium text-slate-700">
+            Endereço
           </label>
           <div className="relative">
-            <select
-              id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+            <input
+              id="endereco"
+              type="text"
+              value={endereco}
+              onChange={(e) => setEndereco(e.target.value)}
+              placeholder="Endereço do cliente"
               className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
               required
               disabled={loading}
-            >
-              <option value="">Selecione o status</option>
-              <option value="ACTIVE">Disponível</option>
-              <option value="INACTIVE">Indisponível</option>
-            </select>
+            />
           </div>
         </div>
+
+
+        <ImageUpload
+          value={imagem}
+          onChange={setImagem}
+        />
 
         {/* Botão */}
         <button
@@ -161,44 +184,6 @@ const ClientCreate = () => {
   );
 }
 
-export type HeaderClientType = {
-  handleBack?: () => void;
-  textVoltar: string;
-  textDetalhes: string;
-  textPreencha?: string;
-};
-export const HeaderClient = ({ handleBack, textVoltar, textDetalhes, textPreencha }: HeaderClientType) => {
-  return (
-    <div>
-      {handleBack && (
-        <button
-          type="button"
-          onClick={handleBack}
-          className="mb-3 flex items-center gap-2 text-sm text-slate-500 transition hover:text-slate-800"
-        >
-          <ArrowLeft size={17} />
-          {textVoltar}
-        </button>
-      )}
 
-      {!handleBack && textVoltar && (
-        <p className="mb-3 text-sm text-slate-500">
-          {textVoltar}
-        </p>
-      )}
-
-      <h1 className="text-2xl font-semibold text-slate-800">
-        {textDetalhes}
-      </h1>
-
-      {textPreencha && (
-        <p className="mt-1 text-sm text-slate-500">
-          {textPreencha}
-        </p>
-      )}
-
-    </div>
-  );
-}
 
 export default ClientCreate;

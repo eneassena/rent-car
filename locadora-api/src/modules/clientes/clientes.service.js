@@ -19,9 +19,10 @@ function get(id) {
   return row;
 }
 function create(data, imagePath) {
+  console.log(`Create data: ${JSON.stringify(data)}, image: ${imagePath}`);
   const result = db.prepare(`
-    INSERT INTO clientes (nome, cpf, telefone, email, endereco, observacoes, imagem_path)
-    VALUES (@nome, @cpf, @telefone, @email, @endereco, @observacoes, @imagem_path)
+    INSERT INTO clientes (nome, cpf, telefone, email, endereco, imagem_path)
+    VALUES (@nome, @cpf, @telefone, @email, @endereco, @imagem_path)
   `).run({ ...data, imagem_path: imagePath || null });
   return get(result.lastInsertRowid);
 }

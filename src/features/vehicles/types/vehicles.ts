@@ -7,11 +7,15 @@ export interface Vehicle {
   cor: string;
   valor_diaria: number;
   observacoes?: string | null;
-  status: VehicleStatusType;
-  imagem_path?: File | null;
+  status: VeiculoStatus;
+  imagem_path?: string | null;
 }
 
-export type VehicleStatusType = "DISPONIVEL" | "LOCADO" | "MANUTENCAO" | "INATIVO";
+export type VeiculoStatus =
+  | "DISPONIVEL"
+  | "LOCADO"
+  | "MANUTENCAO"
+  | "INATIVO";
 
 export interface CreateVehicleDTO {
   marca: string;
@@ -20,5 +24,21 @@ export interface CreateVehicleDTO {
   ano: number;
   cor: string;
   valor_diaria: number;
-  imagem_path?: File | null;
+  observacoes?: string | null;
+  imagem?: File | null;
 }
+
+export interface UpdateVehicleDTO extends CreateVehicleDTO {}
+export interface CreateVehicleResponse extends Vehicle {}
+
+export type VehicleCores =
+  | "BRANCO"
+  | "PRETO"
+  | "PRATA"
+  | "CINZA"
+  | "VERMELHO"
+  | "AZUL"
+  | "VERDE"
+  | "AMARELO"
+  | "LARANJA"
+  | "ROXO";

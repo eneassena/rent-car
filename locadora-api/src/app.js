@@ -23,6 +23,7 @@ app.use("/api/usuarios",require("./modules/usuarios/usuarios.routes"));
 app.use("/api/clientes",require("./modules/clientes/clientes.routes"));
 app.use("/api/veiculos",require("./modules/veiculos/veiculos.routes"));
 app.use("/api/locacoes",require("./modules/locacoes/locacoes.routes"));
+app.use("/api/dashboard", require("./modules/dashboard/dashboard.routes"));
 
 app.use((req,res)=>res.status(404).json({success:false,message:"Rota não encontrada."}));
 app.use(errorMiddleware);

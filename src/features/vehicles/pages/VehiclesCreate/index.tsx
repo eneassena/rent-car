@@ -1,13 +1,12 @@
 import { useState, type SubmitEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Car } from 'lucide-react'
 import { FormEditOrCreate } from '@/shared/components/Forms/FormEditOrCreate';
 import { CreateVehicleDTO } from '../../types/vehicles';
-import { useData } from '@/contexts/dataContext';
-
 import ImageUpload from "@/features/vehicles/components/ImageUpload";
-
-
-
+import { listCores } from '../VehiclesEdit';
+import HeaderPage from '../../components/HeaderPage';
+import { vehiclesServices } from "../../services/vehicles.service";
 
 
 const VehiclesCreate = () => {
@@ -17,17 +16,17 @@ const VehiclesCreate = () => {
     const [placa, setPlaca] = useState<string>('');
     const [cor, setCor] = useState<string>('');
     const [valorDiaria, setValorDiaria] = useState<number>(0);
-    const [imagemPath, setImagemPath] = useState<File | null>(null);
+    const [imagem, setImagem] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const context = useData();
-    const data = 'data' in context ? context.data : undefined;
+    const navigation = useNavigate();
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         // Adicione aqui a lógica para enviar os dados do formulário
         setLoading(true);
         try {
+            // Supondo que você tenha uma função para criar veículo na api
             const newVehicle: CreateVehicleDTO = {
                 marca,
                 modelo,
@@ -35,37 +34,40 @@ const VehiclesCreate = () => {
                 ano: Number(ano),
                 cor,
                 valor_diaria: valorDiaria,
-                // imagem_path: new File([imagemPath], "imagem.jpg")
+                imagem
             };
-            if (imagemPath) {
-                newVehicle.imagem_path = imagemPath;
-            }
-
-            if (data) {
-                // Supondo que você tenha uma função para criar veículo no contexto
-                await data.createVehicle(newVehicle);
-            }
-            console.log('Veículo criado com sucesso');
-            // setError('');
-            // setMarca('');
-            // setModelo('');
-            // setAno(0);
-            // setPlaca('');
-            // setCor('');
-            // setValorDiaria(0);
-            // setImagemPath(null);
-
+            await vehiclesServices.create(newVehicle)
+            navigation('/veiculos', { replace: true });
         } catch (error) {
             console.error(error);
             setError('Ocorreu um erro ao enviar o formulário.');
         } finally {
+            setError('');
+            setMarca('');
+            setModelo('');
+            setAno(0);
+            setPlaca('');
+            setCor('');
+            setValorDiaria(0);
+            setImagem(null);
             setLoading(false);
         }
+    };
+
+    const handleBack = () => {
+        navigation("/veiculos", { replace: true });
     };
 
     return (
         <div>
             <FormEditOrCreate handleSubmit={handleSubmit} error={error}>
+                <HeaderPage
+                    handleBack={handleBack}
+                    textVoltar="Voltar para veículos"
+                    textDetalhes="Detalhes do veículo"
+                    textPreencha="Preencha os detalhes do veículo"
+                />
+
                 {/* Marca */}
                 <div className="flex flex-col gap-1.5">
                     <label htmlFor="marca" className="block text-sm font-medium text-slate-700">
@@ -158,18 +160,11 @@ const VehiclesCreate = () => {
                             required
                             disabled={loading}
                         >
-                            <option value="">Selecione a cor</option>
-                            <option value="preto">Preto</option>
-                            <option value="branco">Branco</option>
-                            <option value="prata">Prata</option>
-                            <option value="azul">Azul</option>
-                            <option value="vermelho">Vermelho</option>
-                            <option value="verde">Verde</option>
-                            <option value="amarelo">Amarelo</option>
-                            <option value="laranja">Laranja</option>
-                            <option value="rosa">Rosa</option>
-                            <option value="roxo">Roxo</option>
-                            <option value="marrom">Marrom</option>
+                            {listCores.map((cor) => (
+                                <option key={cor} value={cor}>
+                                    {cor.charAt(0).toUpperCase() + cor.slice(1)}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </div>
@@ -194,10 +189,8 @@ const VehiclesCreate = () => {
                 </div>
 
                 <ImageUpload
-                value={imagemPath}
-                    onChange={(file) => {
-                        setImagemPath(file);
-                    }}
+                    value={imagem}
+                    onChange={setImagem}
                 />
 
                 {/* Botão */}
