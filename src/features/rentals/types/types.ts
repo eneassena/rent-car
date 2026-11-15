@@ -1,18 +1,39 @@
-
 type Rental = {
-    id: string;
-    veiculoId: string;
-    veiculo: string;
-    clienteId: string;
-    cliente: string;
-    data_inicio: string;
-    data_fim: string;
-    diarias: number;
-    valor: number;
-    valor_diaria: number;
-    status: string;
-    paymentStatus: string;
-    image: string;
+  id: number;
+  cliente_id: number;
+  veiculo_id: number;
+  modalidade: string;
+  data_retirada: string;
+  data_devolucao: string;
+  valor_diaria: number;
+  valor_fechado: number;
+  valor_total: number;
+  status: string;
+  observacoes: string;
+  imagem_path?: string | null;
+  cliente_nome?: string;
+  cliente_cpf?: string;
+  veiculo_placa?: string;
+  veiculo_marca?: string;
+  veiculo_modelo?: string;
 };
- 
+
+export type RentalStatus = "ATIVA" | "FINALIZADA" | "CANCELADA";
+export type RentalModalidade = "DIARIA" | "PERIODO";
+
+export interface CreateRentalDTO {
+  cliente_id: number;
+  veiculo_id: number;
+  modalidade: string;
+  data_retirada: string;
+  data_devolucao: string;
+  valor_diaria: number;
+  valor_fechado: number;
+  valor_total: number;
+  observacoes: string;
+  imagem?: File | null;
+}
+
+export interface UpdateRentalDTO extends CreateRentalDTO {}
+
 export default Rental;

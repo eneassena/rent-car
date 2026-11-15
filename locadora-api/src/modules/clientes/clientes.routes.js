@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { z } = require("zod");
 const c = require("./clientes.controller");
 const validate = require("../../middlewares/validateMiddleware");
-const image = require("../../middlewares/uploadMiddleware");
+const imageUpload = require("../../middlewares/uploadMiddleware");
 const text = z.string().trim().nullable().optional().default(null);
 const schema = z.object({
   nome: z.string().trim().min(2),
@@ -12,7 +12,17 @@ const schema = z.object({
 });
 router.get("/",c.list);
 router.get("/:id",c.get);
-router.post("/",image("clientes"),validate(schema),c.create);
-router.put("/:id",image("clientes"),validate(schema),c.update);
+router.post(
+  "/",
+  imageUpload("clientes"),
+  (req, res, next) => {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    next();
+  },
+  c.create
+);
+// router.post("/",image("clientes"),validate(schema),c.create);
+router.put("/:id",imageUpload("clientes"),validate(schema),c.update);
 router.delete("/:id",c.remove);
 module.exports = router;

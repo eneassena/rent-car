@@ -8,6 +8,7 @@ const root = path.resolve(process.cwd(), "uploads");
 const folders = ["usuarios", "clientes", "veiculos", "locacoes"];
 const storage = multer.diskStorage({
   destination(req, file, cb) {
+    console.log("Upload folder:", req.uploadFolder);
     if (!folders.includes(req.uploadFolder)) return cb(new Error("Pasta de upload inválida."));
     const dir = path.join(root, req.uploadFolder);
     fs.mkdirSync(dir, { recursive: true });

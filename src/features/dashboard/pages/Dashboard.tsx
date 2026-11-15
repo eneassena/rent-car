@@ -1,66 +1,93 @@
+import { useState, useEffect } from "react";
 import { Users, CarFront, ClipboardList, DollarSign, TrendingUp } from "lucide-react";
 
-const cards = [
-  { label: "Veículos", value: "42", color: "bg-blue-500" },
-  { label: "Locações", value: "18", color: "bg-emerald-500" },
-  { label: "Clientes", value: "248", color: "bg-amber-500" },
-  { label: "Receita/Mês", value: "R$ 28.5k", color: "bg-violet-500" },
-];
 
-// Estatísticas do dashboard
-const stats = [
-  {
-    title: "Total de clientes",
-    value: "248",
-    description: "+12% este mês",
-    icon: Users,
-  },
-  {
-    title: "Veículos cadastrados",
-    value: "42",
-    description: "36 disponíveis",
-    icon: CarFront,
-  },
-  {
-    title: "Locações ativas",
-    value: "18",
-    description: "6 previstas para hoje",
-    icon: ClipboardList,
-  },
-  {
-    title: "Receita mensal",
-    value: "R$ 28.450",
-    description: "+8,5% este mês",
-    icon: DollarSign,
-  },
-];
+import { DashboardOverview } from "@/features/dashboard/types";
+import dashboardService from "@/features/dashboard/services/dadhboard.service";
+import ItemContentDashboard from "@/features/dashboard/components/ItemContentDashboard";
 
-// Últimas locações recentes
-const recentRentals = [
-  {
-    id: 1,
-    client: "Carlos Oliveira",
-    vehicle: "Toyota Corolla",
-    date: "01/11/2026",
-    status: "Ativa",
-  },
-  {
-    id: 2,
-    client: "Mariana Santos",
-    vehicle: "Hyundai HB20",
-    date: "31/10/2026",
-    status: "Pendente",
-  },
-  {
-    id: 3,
-    client: "Pedro Almeida",
-    vehicle: "Chevrolet Onix",
-    date: "30/10/2026",
-    status: "Concluída",
-  },
-];
 
 export default function Dashboard() {
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+
+  // Estatísticas do dashboard
+  const stats = overview ? [
+    {
+      title: "Total de clientes",
+      value: String(overview.stats.totalClientes),
+      description: "Clientes cadastrados",
+      icon: Users
+    },
+    {
+      title: "Veículos cadastrados",
+      value: String(overview.stats.totalVeiculos),
+      description: `${overview.stats.veiculosDisponiveis} disponíveis`,
+      icon: CarFront
+    },
+    {
+      title: "Locações ativas",
+      value: String(overview.stats.locacoesAtivas),
+      description: `${overview.stats.locacoesPrevistasHoje} previstas para hoje`,
+      icon: ClipboardList
+    },
+    {
+      title: "Receita mensal",
+      value: overview.stats.receitaMensal === null
+        ? "—"
+        : overview.stats.receitaMensal.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        }),
+      description: overview.stats.variacaoReceitaMensal === null
+        ? "Sem comparação disponível"
+        : `${overview.stats.variacaoReceitaMensal}% em relação ao mês anterior`,
+      icon: DollarSign
+    }
+  ] : [];
+
+  const cards = overview ? [
+    {
+      label: "Veículos",
+      value: String(overview.cards.totalVeiculos),
+      color: "bg-blue-500"
+    },
+    {
+      label: "Locações",
+      value: String(overview.cards.totalLocacoes),
+      color: "bg-emerald-500"
+    },
+    {
+      label: "Clientes",
+      value: String(overview.cards.totalClientes),
+      color: "bg-amber-500"
+    },
+    {
+      label: "Receita/Mês",
+      value: overview.cards.receitaMensal === null
+        ? "—"
+        : overview.cards.receitaMensal.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        }),
+      color: "bg-violet-500"
+    }
+  ] : [];
+
+  const recentRentals = overview?.recentRentals ?? [];
+
+
+  async function fetchOverview() {
+    try {
+      const response = await dashboardService.getOverview();
+      setOverview(response);
+    } catch (error) {
+      console.error("Failed to fetch dashboard overview:", error);
+    }
+  }
+  useEffect(() => {
+    fetchOverview();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div>
@@ -150,13 +177,12 @@ export default function Dashboard() {
 
                     <td className="px-5 py-4">
                       <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${
-                          rental.status === "Ativa"
-                            ? "bg-green-100 text-green-700"
-                            : rental.status === "Pendente"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-slate-100 text-slate-600"
-                        }`}
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${rental.status === "Ativa"
+                          ? "bg-green-100 text-green-700"
+                          : rental.status === "Pendente"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-slate-100 text-slate-600"
+                          }`}
                       >
                         {rental.status}
                       </span>
@@ -172,10 +198,3 @@ export default function Dashboard() {
   );
 }
 
-const ItemContentDashboard = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-slate-100">
-      {children}
-    </div>
-  );
-};

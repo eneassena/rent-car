@@ -33,19 +33,19 @@ export default function LoginPage() {
                         <LoginForm />
 
                         {/* Divisor */}
-                        <div className="flex items-center gap-3 my-6">
+                        {/* <div className="flex items-center gap-3 my-6">
                             <div className="flex-1 border-t border-slate-200" />
                             <span className="text-xs text-slate-500">ou</span>
                             <div className="flex-1 border-t border-slate-200" />
-                        </div>
+                        </div> */}
 
                         {/* Cadastro */}
-                        <p className="text-center text-sm text-slate-500">
+                        {/* <p className="text-center text-sm text-slate-500">
                             Não tem conta?{' '}
                             <a href="/cadastro" className="font-medium text-brand-600 hover:text-brand-700">
                                 Criar conta
                             </a>
-                        </p>
+                        </p> */}
                     </div>
 
                     {/* Rodapé mobile */}

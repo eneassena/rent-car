@@ -1,64 +1,52 @@
-
-import { useEffect, useMemo, useState } from "react";
-import { useData } from "../../../../contexts/dataContext";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 
 import DataTable, {
   type Column,
-} from "../../../../shared/components/DataTable";
-
-import StatusBadge from "../../../../shared/components/StatusBadge";
-import SearchInput from "../../../../shared/components/SearchInput";
-import TablePagination from "../../../../shared/components/TablePagination";
-
-import type { Client } from "../../types/client";
-import { HeaderClient } from "../ClientCreate";
+} from "@/shared/components/DataTable";
+import SearchInput from "@/shared/components/SearchInput";
+import TablePagination from "@/shared/components/TablePagination";
+import type { Client } from "@/features/clients/types/client";
+import HeaderClient from "@/features/clients/components/HeaderClient";
 import { ConfirmModal } from "@/shared/components/ConfirmModal";
+import { clientesService, Pagination } from '@/features/clients/services/client.service';
 
 const ClientList = () => {
   const navigate = useNavigate();
-  const context = useData();
-  const data = 'data' in context ? context.data : undefined;
-
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
-  const pageSize = 10;
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+  const [pagination, setPagination] = useState<Pagination>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 0,
+  });
 
+  function handleNewClient() {
+    navigate("/clientes/novo");
+  }
 
+  async function loadClients() {
+    try {
+      setLoading(true);
+      const response = await clientesService.list({ page: pagination.page, limit: pagination.limit });
+
+      setClients(response.items);
+      setPagination(response.pagination);
+    } catch (error) {
+      console.error("Erro ao carregar clientes:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function loadClients() {
-      try {
-        if (data) {
-          setLoading(true);
-
-          const response = await data.listClient({
-            page: currentPage,
-            limit: pageSize,
-          });
-          setClients(response.data.items);
-          setTotalPages(response.data.pagination.pages);
-          setTotalItems(response.data.pagination.total);
-          setLoading(false);
-        }
-
-
-      } catch (error) {
-        console.error("Erro ao carregar clientes:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadClients();
-  }, [currentPage, pageSize]);
+  }, []);
 
   // 2. Definir as colunas
   const columns: Column<Client>[] = [
@@ -79,18 +67,8 @@ const ClientList = () => {
       header: "CPF",
     },
     {
-      accessor: "status",
-      header: "Status",
-      render: (client) => (
-        <StatusBadge
-          label={
-            client.status === "ACTIVE" ? "Ativo" : "Inativo"
-          }
-          variant={
-            client.status === "ACTIVE" ? "success" : "neutral"
-          }
-        />
-      ),
+      accessor: "endereco",
+      header: "Endereço",
     },
   ];
 
@@ -105,19 +83,16 @@ const ClientList = () => {
   }
 
   // 7. Ação: excluir
-  async function handleDelete(client: Client) {
+  async function handleDelete(id: number) {
     if (!clientToDelete) return;
 
     try {
-      if (!data) return;
-      await data.deleteClient(client.id);
-
-      // Atualiza o estado após a exclusão
+      await clientesService.delete(id);
       setClients((current) =>
-        current.filter((item) => item.id !== client.id)
+        current.filter((item) => item.id !== id)
       );
 
-      setCurrentPage(1);
+      setPagination((current) => ({ ...current, page: 1 }));
     } catch (error) {
       console.error("Erro ao excluir cliente:", error);
       alert("Não foi possível excluir o cliente.");
@@ -139,11 +114,11 @@ const ClientList = () => {
 
         <button
           type="button"
-          onClick={() => navigate("/clientes/novo")}
+          onClick={handleNewClient}
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
         >
           <Plus size={18} />
-          Novo cliente {clients.length}
+          Novo cliente
         </button>
       </div>
 
@@ -153,7 +128,7 @@ const ClientList = () => {
           value={search}
           onChange={(value) => {
             setSearch(value);
-            setCurrentPage(1);
+            setPagination((current) => ({ ...current, page: 1 }));
           }}
           placeholder="Buscar por nome, e-mail ou CPF..."
         />
@@ -167,7 +142,7 @@ const ClientList = () => {
         cancelText="Cancelar"
         onConfirm={() => {
           if (!clientToDelete) return;
-          handleDelete(clientToDelete);
+          handleDelete(clientToDelete.id);
           setIsConfirmModalOpen(false);
           setClientToDelete(null);
         }}
@@ -192,11 +167,11 @@ const ClientList = () => {
 
       {/* Paginação */}
       <TablePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        pageSize={pageSize}
-        onPageChange={setCurrentPage}
+        currentPage={pagination.page}
+        totalPages={pagination.pages}
+        totalItems={pagination.total}
+        pageSize={pagination.limit}
+        onPageChange={(page) => setPagination((current) => ({ ...current, page }))}
       />
     </div>
   );

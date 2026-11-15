@@ -48,7 +48,11 @@ export default function ImageUpload({
                         accept="image/jpeg,image/png,image/webp"
                         onChange={(event) => {
                             const file = event.target.files?.[0] ?? null;
+
                             onChange(file);
+
+                            console.log("Arquivo selecionado:", file);
+                            console.log("É File?", file instanceof File);
                         }}
                         className="block w-full text-sm"
                     />
