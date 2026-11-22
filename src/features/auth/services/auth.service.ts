@@ -6,11 +6,12 @@ const TOKEN_KEY = 'rentcar.token';
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await api.post('/auth/login', credentials);
-    this.saveToken(response.data.token, credentials.remember ? true : false);
     return response.data;
   },
 
   saveToken(token: string, remember: boolean) {
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     if (remember) {
       localStorage.setItem(TOKEN_KEY, token);
     } else {

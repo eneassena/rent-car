@@ -4,10 +4,11 @@ const db = require("../../config/database");
 const AppError = require("../../utils/AppError");
 
 async function login(email, password) {
-  const user = db.prepare(`
+  const [users] = await db.execute(`
     SELECT id, nome, email, senha_hash, role, ativo, imagem_path
     FROM usuarios WHERE email = ?
-  `).get(email.toLowerCase().trim());
+  `, [email.toLowerCase().trim()]);
+  const user = users[0];
 
   if (!user || !user.ativo) throw new AppError("Email ou senha inválidos.", 401);
   const valid = await bcrypt.compare(password, user.senha_hash);
@@ -25,10 +26,11 @@ async function login(email, password) {
   delete user.senha_hash;
   return { token, user };
 }
-function me(id) {
-  const user = db.prepare(
-    "SELECT id, nome, email, role, ativo, imagem_path, created_at FROM usuarios WHERE id = ?"
-  ).get(id);
+async function me(id) {
+  const [users] = await db.execute(
+    "SELECT id, nome, email, role, ativo, imagem_path, created_at FROM usuarios WHERE id = ?", [id]
+  );
+  const user = users[0];
   if (!user) throw new AppError("Usuário não encontrado.", 404);
   return user;
 }

@@ -1,11 +1,11 @@
 
 const dashboardService = require("./dashboard.service");
 
-function overview(req, res, next) {
+async function overview(req, res, next) {
   try {
     return res.json({
       success: true,
-      data: dashboardService.getOverview()
+      data: await dashboardService.getOverview()
     });
   } catch (error) {
     next(error);

@@ -28,7 +28,9 @@ export interface CreateVehicleDTO {
   imagem?: File | null;
 }
 
-export interface UpdateVehicleDTO extends CreateVehicleDTO {}
+export interface UpdateVehicleDTO extends CreateVehicleDTO {
+  status: VeiculoStatus;
+}
 export interface CreateVehicleResponse extends Vehicle {}
 
 export type VehicleCores =

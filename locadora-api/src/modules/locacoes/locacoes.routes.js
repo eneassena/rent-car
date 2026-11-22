@@ -10,8 +10,8 @@ const schema=z.object({
  modalidade:z.enum(["DIARIA","PERIODO"]),
  data_retirada:z.string(),
  data_devolucao:z.string(),
- valor_diaria:z.preprocess(v => v === "" || v === undefined ? null : Number(v), z.number().min(0).nullable()).default(null),
- valor_fechado:z.preprocess(v => v === "" || v === undefined ? null : Number(v), z.number().min(0).nullable()).default(null),
+ valor_diaria:z.preprocess(v => v === "" || v == null ? null : Number(v), z.number().min(0).nullable()).default(null),
+ valor_fechado:z.preprocess(v => v === "" || v == null ? null : Number(v), z.number().min(0).nullable()).default(null),
  observacoes:nullableText
 });
 router.get("/",c.list);

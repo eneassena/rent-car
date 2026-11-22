@@ -5,8 +5,8 @@ async function login(req, res, next) {
     res.json({ success: true, data: result });
   } catch (err) { next(err); }
 }
-function me(req, res, next) {
-  try { res.json({ success: true, data: service.me(req.user.id) }); }
+async function me(req, res, next) {
+  try { res.json({ success: true, data: await service.me(req.user.id) }); }
   catch (err) { next(err); }
 }
 module.exports = { login, me };

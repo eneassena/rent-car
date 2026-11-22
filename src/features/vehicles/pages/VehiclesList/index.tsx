@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Vehicle } from '../../types/vehicles';
 
 
@@ -19,7 +19,9 @@ const VehiclesList = () => {
     const navigate = useNavigate();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
+    const [refresh, setRefresh] = useState(0);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [vehicleToDelete, setVehicleToDelete] = useState<Vehicle | null>(null);
     const [pagination, setPagination] = useState<Pagination>({
@@ -29,24 +31,22 @@ const VehiclesList = () => {
         pages: 0,
     });
 
-    async function loadVehicles() {
-        try {
-
-            setLoading(true);
-            const response = await vehiclesServices.list();
-            setVehicles(response.items);
-            setPagination(response.pagination);
-        } catch (error) {
-            console.error("Erro ao carregar clientes:", error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // 1. Buscar clientes
     useEffect(() => {
-        loadVehicles();
-    }, []);
+        let active = true;
+        vehiclesServices.list({ page: pagination.page, limit: pagination.limit, search })
+            .then((response) => {
+                if (!active) return;
+                setVehicles(response.items);
+                setPagination(response.pagination);
+                setLoadError(null);
+            })
+            .catch((error) => {
+                console.error("Erro ao carregar veículos:", error);
+                if (active) setLoadError("Não foi possível carregar os veículos.");
+            })
+            .finally(() => { if (active) setLoading(false); });
+        return () => { active = false; };
+    }, [pagination.page, pagination.limit, search, refresh]);
 
     // 2. Definir as colunas
     const columns: Column<Vehicle>[] = [
@@ -108,11 +108,8 @@ const VehiclesList = () => {
             await vehiclesServices.delete(vehicle.id);
             navigate('/veiculos', { replace: true });
             // Atualiza o estado após a exclusão
-            setVehicles((current) =>
-                current.filter((item) => item.id !== vehicle.id)
-            );
-
-            setPagination((current) => ({ ...current, page: 1 }));
+            if (pagination.page !== 1) setPagination((current) => ({ ...current, page: 1 }));
+            else setRefresh((current) => current + 1);
         } catch (error) {
             console.error("Erro ao excluir veículo:", error);
             alert("Não foi possível excluir o veículo.");
@@ -131,6 +128,7 @@ const VehiclesList = () => {
 
     return (
         <div className="flex flex-col">
+            {loadError && <p className="text-red-500" role="alert">{loadError}</p>}
             {/* Cabeçalho */}
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
@@ -160,7 +158,7 @@ const VehiclesList = () => {
                         setSearch(value);
                         setPagination((current) => ({ ...current, page: 1 }));
                     }}
-                    placeholder="Buscar por modelo, placa ou ano..."
+                    placeholder="Buscar por modelo, marca ou placa..."
                 />
             </div>
 

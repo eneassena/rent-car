@@ -17,6 +17,8 @@ const RentalsDetails = () => {
 
     const [rental, setRental] = useState<Rental | null>(null);
     const [loading, setLoading] = useState(true);
+    const [changingStatus, setChangingStatus] = useState(false);
+    const [statusError, setStatusError] = useState<string | null>(null);
 
     useEffect(() => {
         let active = true;
@@ -61,6 +63,20 @@ const RentalsDetails = () => {
         navigate("/locacoes");
     };
 
+    const changeStatus = async (action: 'finalizar' | 'cancelar') => {
+        if (!rental || !window.confirm(`Deseja ${action} esta locação?`)) return;
+        setChangingStatus(true);
+        setStatusError(null);
+        try {
+            setRental(await rentalsService.changeStatus(rental.id, action));
+        } catch (error) {
+            console.error("Erro ao alterar locação:", error);
+            setStatusError("Não foi possível alterar o status da locação.");
+        } finally {
+            setChangingStatus(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex min-h-64 items-center justify-center">
@@ -102,10 +118,17 @@ const RentalsDetails = () => {
                     textVoltar="Voltar para locações"
                     textDetalhes="Detalhes da locação"
                     textPreencha="Preencha os detalhes da locação"
-                    handleEdit={handleEdit}
+                    handleEdit={rental.status === "ATIVA" ? handleEdit : undefined}
                     textEditar="Editar locação"
                 />
             </div>
+            {rental.status === "ATIVA" && (
+                <div className="flex gap-3">
+                    <button type="button" disabled={changingStatus} onClick={() => changeStatus("finalizar")} className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-60">Finalizar locação</button>
+                    <button type="button" disabled={changingStatus} onClick={() => changeStatus("cancelar")} className="rounded-lg bg-red-600 px-4 py-2 text-white disabled:opacity-60">Cancelar locação</button>
+                </div>
+            )}
+            {statusError && <p className="text-red-500">{statusError}</p>}
 
             {/* Identificação */}
             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">

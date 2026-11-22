@@ -9,6 +9,7 @@ import ItemContentDashboard from "@/features/dashboard/components/ItemContentDas
 
 export default function Dashboard() {
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Estatísticas do dashboard
   const stats = overview ? [
@@ -80,8 +81,10 @@ export default function Dashboard() {
     try {
       const response = await dashboardService.getOverview();
       setOverview(response);
+      setError(null);
     } catch (error) {
       console.error("Failed to fetch dashboard overview:", error);
+      setError("Não foi possível carregar o dashboard.");
     }
   }
   useEffect(() => {
@@ -90,6 +93,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {error && <p className="text-red-500" role="alert">{error}</p>}
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
         <p className="text-slate-500 text-sm">Visão geral da sua locadora</p>
@@ -197,4 +201,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

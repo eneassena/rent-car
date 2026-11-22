@@ -2,8 +2,8 @@
 const db = require("../../config/database");
 
 
-function getOverview() {
-  const totals = db.prepare(`
+async function getOverview() {
+  const [totalRows] = await db.execute(`
     SELECT
       (SELECT COUNT(*) FROM clientes) AS total_clientes,
       (SELECT COUNT(*) FROM veiculos) AS total_veiculos,
@@ -22,25 +22,27 @@ function getOverview() {
         SELECT COUNT(*)
         FROM locacoes
         WHERE status = 'ATIVA'
-          AND date(data_retirada) = date('now', 'localtime')
+          AND data_retirada = CURDATE()
       ) AS locacoes_previstas_hoje
-  `).get();
+  `);
+  const totals = totalRows[0];
 
   // Receita mensal: soma das locações com retirada no mês atual
-  const revenue = db.prepare(`
+  const [revenueRows] = await db.execute(`
     SELECT
       COALESCE(SUM(valor_total), 0) AS receita_mensal
     FROM locacoes
-    WHERE strftime('%Y-%m', data_retirada) =
-          strftime('%Y-%m', 'now', 'localtime')
+    WHERE data_retirada >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+      AND data_retirada < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
       AND status <> 'CANCELADA'
-  `).get();
+  `);
+  const revenue = revenueRows[0];
 
-  const recentRentals = db.prepare(`
+  const [recentRentals] = await db.execute(`
     SELECT
       l.id,
       c.nome AS client,
-      TRIM(v.marca || ' ' || v.modelo) AS vehicle,
+      TRIM(CONCAT(v.marca, ' ', v.modelo)) AS vehicle,
       l.data_retirada AS date,
       l.status
     FROM locacoes l
@@ -48,7 +50,7 @@ function getOverview() {
     INNER JOIN veiculos v ON v.id = l.veiculo_id
     ORDER BY l.id DESC
     LIMIT 5
-  `).all();
+  `);
 
   return {
     cards: {
@@ -73,8 +75,8 @@ function getOverview() {
 }
 
 
-function getMetrics() {
-  const totals = db.prepare(`
+async function getMetrics() {
+  const [totalRows] = await db.execute(`
     SELECT
       (SELECT COUNT(*) FROM clientes) AS total_clientes,
       (SELECT COUNT(*) FROM veiculos) AS total_veiculos,
@@ -94,17 +96,18 @@ function getMetrics() {
         FROM locacoes
         WHERE status = 'ATIVA'
       ) AS locacoes_ativas
-  `).get();
+  `);
+  const totals = totalRows[0];
 
   // Agrupa as locações por status.
-  const statusRows = db.prepare(`
+  const [statusRows] = await db.execute(`
     SELECT
       UPPER(status) AS status,
       COUNT(*) AS total,
       COALESCE(SUM(valor_total), 0) AS faturamento
     FROM locacoes
     GROUP BY UPPER(status)
-  `).all();
+  `);
 
   const statusMap = Object.fromEntries(
     statusRows.map(row => [row.status, row])

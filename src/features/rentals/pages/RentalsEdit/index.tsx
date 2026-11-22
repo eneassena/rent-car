@@ -46,7 +46,6 @@ const RentalsEdit = () => {
             setError("Ocorreu um erro ao atualizar o rental.");
         } finally {
             setLoading(false);
-            setLocacoes({} as UpdateRentalDTO);
         }
     };
 
@@ -148,11 +147,12 @@ const RentalsEdit = () => {
                         <input
                             id="valor"
                             type="number"
-                            value={locacoes.valor_diaria}
-                            onChange={(e) => setLocacoes({ ...locacoes, valor_diaria: Number(e.target.value) })}
+                            value={locacoes.valor_diaria ?? ""}
+                            onChange={(e) => setLocacoes({ ...locacoes, valor_diaria: e.target.value === "" ? null : Number(e.target.value) })}
                             placeholder="Valor"
                             className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
+                            min="0"
+                            step="0.01"
                             disabled={loading}
                         />
                     </div>
@@ -167,34 +167,19 @@ const RentalsEdit = () => {
                         <input
                             id="valor_fechado"
                             type="number"
-                            value={locacoes.valor_fechado}
-                            onChange={(e) => setLocacoes({ ...locacoes, valor_fechado: Number(e.target.value) })}
+                            value={locacoes.valor_fechado ?? ""}
+                            onChange={(e) => setLocacoes({ ...locacoes, valor_fechado: e.target.value === "" ? null : Number(e.target.value) })}
                             placeholder="Valor"
                             className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
+                            required={locacoes.modalidade === "PERIODO"}
+                            min="0"
+                            step="0.01"
                             disabled={loading}
                         />
                     </div>
                 </div>
 
-                {/* Valor Total*/}
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor="valor_total" className="block text-sm font-medium text-slate-700">
-                        Valor Total
-                    </label>
-                    <div className="relative">
-                        <input
-                            id="valor_total"
-                            type="number"
-                            value={locacoes.valor_total}
-                            onChange={(e) => setLocacoes({ ...locacoes, valor_total: Number(e.target.value) })}
-                            placeholder="Valor Total"
-                            className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
-                </div>
+                <p className="text-sm text-slate-500">O valor total será calculado pela API.</p>
 
                 {/* modalidade */}
                 <div className="flex flex-col gap-1.5">

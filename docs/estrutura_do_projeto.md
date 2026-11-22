@@ -19,14 +19,15 @@ src/
 │
 ├── shared/
 │   ├── components/
+│   ├── utils/
 │   └── layout/
 │       ├── MainLayout/
 │       ├── Sidebar/
 │       └── Header/
 │
-├── contexts/
-├── services/
-├── types/
+├── contexts/*
+├── services/*
+├── types/*
 ├── index.css
 └── main.tsx
 ```

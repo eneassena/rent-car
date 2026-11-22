@@ -1,10 +1,117 @@
 import { ArrowLeft } from "lucide-react";
-import { useState, type SubmitEvent } from "react";
+import { HTMLAttributes, useState, type SubmitEvent } from "react";
+import { ToastContainer, ToastContentProps, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CreateRentalDTO } from "@/features/rentals/types/types";
 import rentalsService from '@/features/rentals/services/rentals.service';
 import FormEditOrCreate from "@/shared/components/Forms/FormEditOrCreate";
 import { RentalModalidade } from "@/features/rentals/types/types";
+
+// const notify = (msg: string) => toast(msg);
+const notify = (msg: string) => {
+    // toast(WithCustomProgressBar, {
+    //     autoClose: 8000,
+    //     customProgressBar: true,
+    //     closeButton: false,
+    //     data: {
+    //         message: msg,
+    //     },
+    // });
+
+    const id = toast(WithCustomProgressBar, {
+        progress: 0,
+        customProgressBar: true,
+        closeButton: false,
+        data: {
+            message: msg,
+        },
+    });
+
+    // update the controlled progress bar
+    setTimeout(() => {
+        toast.update(id, {
+            progress: 0.5,
+        });
+
+        // one more time to close the toast
+        setTimeout(() => {
+            toast.done(id);
+        }, 5000);
+    }, 1000);
+};
+
+const WithCustomProgressBar = ({
+    closeToast,
+    isPaused,
+    toastProps,
+    data,
+}: ToastContentProps<{ message: string }>) => {
+    const strokeDash = 565.48;
+    const attributes: HTMLAttributes<SVGCircleElement> = {};
+
+    // handle controlled progress bar
+    // controlled progress bar uses a transition
+    if (typeof toastProps.progress === 'number') {
+        attributes.style = {
+            transition: 'all .1s linear',
+            strokeDashoffset: `${strokeDash - strokeDash * toastProps.progress}px`,
+        };
+
+        if (toastProps.progress >= 1) {
+            attributes.onTransitionEnd = () => {
+                closeToast();
+            };
+        }
+    } else {
+        // normal autoclose uses an animation
+        // animation inside index.css
+        attributes.className = 'animate';
+        attributes.style = {
+            animationDuration: `${toastProps.autoClose}ms`,
+            animationPlayState: isPaused ? 'paused' : 'running',
+        };
+
+        attributes.onAnimationEnd = () => {
+            closeToast();
+        };
+    }
+
+    return (
+        <div className="flex justify-between items-center w-full">
+            <p>{data.message}</p>
+            <svg
+                width="40"
+                height="40"
+                viewBox="-25 -25 250 250"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                className="-rotate-90"
+            >
+                <circle
+                    r="90"
+                    cx="100"
+                    cy="100"
+                    fill="transparent"
+                    stroke="#e0e0e0"
+                    stroke-width="6"
+                    stroke-dasharray={`${strokeDash}px`}
+                    stroke-dashoffset="0"
+                />
+                <circle
+                    r="90"
+                    cx="100"
+                    cy="100"
+                    stroke="#76e5b1"
+                    stroke-width="16px"
+                    stroke-linecap="round"
+                    fill="transparent"
+                    stroke-dasharray={`${strokeDash}px`}
+                    {...attributes}
+                />
+            </svg>
+        </div>
+    );
+}
 
 const RentalsCreate = () => {
     const navigate = useNavigate();
@@ -12,9 +119,8 @@ const RentalsCreate = () => {
     const [clienteId, setClienteId] = useState(0);
     const [dataRetirada, setDataRetirada] = useState("");
     const [dataDevolucao, setDataDevolucao] = useState("");
-    const [valorDiaria, setValorDiaria] = useState(0);
-    const [valorFechado, setValorFechado] = useState(0);
-    const [valorTotal, setValorTotal] = useState(0);
+    const [valorDiaria, setValorDiaria] = useState<number | null>(null);
+    const [valorFechado, setValorFechado] = useState<number | null>(null);
     const [observacoes, setObservacoes] = useState("");
     const listModalidade: RentalModalidade[] = ["DIARIA", "PERIODO"];
     const [modalidade, setModalidade] = useState<string>("DIARIA");
@@ -33,7 +139,6 @@ const RentalsCreate = () => {
                 data_devolucao: dataDevolucao,
                 valor_diaria: valorDiaria,
                 valor_fechado: valorFechado,
-                valor_total: valorTotal,
                 observacoes: observacoes,
                 modalidade: modalidade,
                 imagem: null
@@ -42,19 +147,10 @@ const RentalsCreate = () => {
             navigate("/locacoes", { replace: true });
         } catch (error) {
             console.error(error);
-            setError("Ocorreu um erro ao criar o cliente.");
+            setError("Ocorreu um erro ao criar a locação.");
+            notify(error instanceof Error ? error.message : "Ocorreu um erro ao criar a locação.");
         } finally {
             setLoading(false);
-            setVeiculoId(0);
-            setClienteId(0);
-            setDataRetirada("");
-            setDataDevolucao("");
-            setValorDiaria(0);
-            setValorFechado(0);
-            setValorTotal(0);
-            setObservacoes("");
-            setModalidade("DIARIA");
-
         }
     };
 
@@ -65,6 +161,7 @@ const RentalsCreate = () => {
     return (
         <div className="space-y-6">
             <FormEditOrCreate handleSubmit={handleSubmit} error={error}>
+                <ToastContainer />
                 <HeaderClient
                     handleBack={handleBack}
                     textVoltar="Voltar para locações"
@@ -158,11 +255,12 @@ const RentalsCreate = () => {
                         <input
                             id="valor"
                             type="number"
-                            value={valorDiaria}
-                            onChange={(e) => setValorDiaria(Number(e.target.value))}
-                            placeholder="Valor"
+                            value={valorDiaria ?? ""}
+                            onChange={(e) => setValorDiaria(e.target.value === "" ? null : Number(e.target.value))}
+                            placeholder="Usar diária do veículo"
                             className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
+                            min="0"
+                            step="0.01"
                             disabled={loading}
                         />
                     </div>
@@ -177,34 +275,19 @@ const RentalsCreate = () => {
                         <input
                             id="valor_fechado"
                             type="number"
-                            value={valorFechado}
-                            onChange={(e) => setValorFechado(Number(e.target.value))}
+                            value={valorFechado ?? ""}
+                            onChange={(e) => setValorFechado(e.target.value === "" ? null : Number(e.target.value))}
                             placeholder="Valor"
                             className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
+                            required={modalidade === "PERIODO"}
+                            min="0"
+                            step="0.01"
                             disabled={loading}
                         />
                     </div>
                 </div>
 
-                {/* Valor Total*/}
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor="valor_total" className="block text-sm font-medium text-slate-700">
-                        Valor Total
-                    </label>
-                    <div className="relative">
-                        <input
-                            id="valor_total"
-                            type="number"
-                            value={valorTotal}
-                            onChange={(e) => setValorTotal(Number(e.target.value))}
-                            placeholder="Valor Total"
-                            className="w-full pl-3 pr-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 bg-white border border-slate-300 rounded-lg outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition"
-                            required
-                            disabled={loading}
-                        />
-                    </div>
-                </div>
+                <p className="text-sm text-slate-500">O valor total será calculado pela API.</p>
 
                 {/* modalidade */}
                 <div className="flex flex-col gap-1.5">
@@ -253,7 +336,7 @@ const RentalsCreate = () => {
                     disabled={loading}
                     className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-500 text-dark text-sm font-medium rounded-lg hover:bg-brand-700 focus:ring-2 focus:ring-brand-500/40 transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
-                    {loading ? 'Carregando...' : 'Editar Locação'}
+                    {loading ? 'Carregando...' : 'Criar Locação'}
                 </button>
             </FormEditOrCreate>
         </div>

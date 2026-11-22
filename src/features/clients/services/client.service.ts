@@ -26,6 +26,7 @@ export const clientesService = {
   async list(params: {
     page: number;
     limit: number;
+    search?: string;
   }): Promise<PaginatedResponse<Client>> {
     const token =
       localStorage.getItem("rentcar.token") ||
@@ -42,7 +43,6 @@ export const clientesService = {
 
   async detailById(id: number): Promise<Client> {
     const response = await api.get(`/clientes/${id}`);
-    console.log(response.data.data);
     return response.data.data;
   },
 
@@ -53,15 +53,10 @@ export const clientesService = {
     formData.append("telefone", client.telefone);
     formData.append("email", client.email);
     formData.append("endereco", client.endereco);
+    if (client.observacoes) formData.append("observacoes", client.observacoes);
 
     if (client.imagem instanceof File) {
       formData.append("imagem", client.imagem);
-    }
-
-    console.log("FormData enviado:");
-
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
     }
 
     const response = await api.post("/clientes", formData);

@@ -6,14 +6,15 @@ const {
 
 const fs = require("fs");
 
-function list(req, res, next) {
+async function list(req, res, next) {
   try {
     res.json({
       success: true,
-      data: s.list({
+      data: await s.list({
         status: req.query.status,
         cliente_id: req.query.cliente_id ? +req.query.cliente_id : undefined,
         veiculo_id: req.query.veiculo_id ? +req.query.veiculo_id : undefined,
+        search: req.query.search,
         page: Math.max(1, +req.query.page || 1),
         limit: Math.min(100, Math.max(1, +req.query.limit || 20)),
       }),
@@ -22,30 +23,29 @@ function list(req, res, next) {
     next(e);
   }
 }
-function get(req, res, next) {
+async function get(req, res, next) {
   try {
-    res.json({ success: true, data: s.get(+req.params.id) });
+    res.json({ success: true, data: await s.get(+req.params.id) });
   } catch (e) {
     next(e);
   }
 }
-function create(req, res, next) {
-  console.log("Creating locacao with body:", req.body);
+async function create(req, res, next) {
   try {
     res
       .status(201)
       .json({
         success: true,
-        data: s.create(req.body, publicImagePath(req.file)),
+        data: await s.create(req.body, publicImagePath(req.file)),
       });
   } catch (e) {
     if (req.file) fs.unlink(req.file.path, () => {});
     next(e);
   }
 }
-function update(req, res, next) {
+async function update(req, res, next) {
   try {
-    const r = s.update(+req.params.id, req.body, publicImagePath(req.file));
+    const r = await s.update(+req.params.id, req.body, publicImagePath(req.file));
     if (r.oldImage) removeFileByPublicPath(r.oldImage);
     res.json({ success: true, data: r.item });
   } catch (e) {
@@ -53,29 +53,29 @@ function update(req, res, next) {
     next(e);
   }
 }
-function finish(req, res, next) {
+async function finish(req, res, next) {
   try {
     res.json({
       success: true,
-      data: s.changeStatus(+req.params.id, "FINALIZADA"),
+      data: await s.changeStatus(+req.params.id, "FINALIZADA"),
     });
   } catch (e) {
     next(e);
   }
 }
-function cancel(req, res, next) {
+async function cancel(req, res, next) {
   try {
     res.json({
       success: true,
-      data: s.changeStatus(+req.params.id, "CANCELADA"),
+      data: await s.changeStatus(+req.params.id, "CANCELADA"),
     });
   } catch (e) {
     next(e);
   }
 }
-function remove(req, res, next) {
+async function remove(req, res, next) {
   try {
-    const row = s.remove(+req.params.id);
+    const row = await s.remove(+req.params.id);
     removeFileByPublicPath(row.imagem_path);
     res.json({ success: true, message: "Locação excluída." });
   } catch (e) {

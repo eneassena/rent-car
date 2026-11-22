@@ -10,7 +10,7 @@ import DataTable, {
 import SearchInput from '@/shared/components/SearchInput';
 import TablePagination from '@/shared/components/TablePagination';
 import { ConfirmModal } from '@/shared/components/ConfirmModal';
-import rentalsServices, { RentalParams } from '@/features/rentals/services/rentals.service';
+import rentalsServices from '@/features/rentals/services/rentals.service';
 import { Pagination } from '@/types/globals';
 
 const RentalsList = () => {
@@ -18,6 +18,8 @@ const RentalsList = () => {
     const [rentals, setRentals] = useState<Rental[]>([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState<string | null>(null);
+    const [refresh, setRefresh] = useState(0);
 
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [rentalToDelete, setRentalToDelete] = useState<Rental | null>(null);
@@ -28,27 +30,22 @@ const RentalsList = () => {
         pages: 0,
     });
 
-    async function loadRentals() {
-        try {
-            const param: RentalParams = {
-                page: pagination.page,
-                limit: pagination.limit,
-            };
-            const response = await rentalsServices.list(param);
-            console.log(`Response from rentalsServices.list:`, response.items);
-            setRentals(response.items);
-            setPagination(response.pagination);
-        } catch (error) {
-            console.error("Erro ao carregar clientes:", error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    // 1. Buscar clientes
     useEffect(() => {
-        loadRentals();
-    }, []);
+        let active = true;
+        rentalsServices.list({ page: pagination.page, limit: pagination.limit, search })
+            .then((response) => {
+                if (!active) return;
+                setRentals(response.items);
+                setPagination(response.pagination);
+                setLoadError(null);
+            })
+            .catch((error) => {
+                console.error("Erro ao carregar locações:", error);
+                if (active) setLoadError("Não foi possível carregar as locações.");
+            })
+            .finally(() => { if (active) setLoading(false); });
+        return () => { active = false; };
+    }, [pagination.page, pagination.limit, search, refresh]);
 
     // 2. Definir as colunas
     const columns: Column<Rental>[] = [
@@ -108,13 +105,11 @@ const RentalsList = () => {
             await rentalsServices.delete(Number(rental.id));
             navigate('/locacoes');
             // Atualiza o estado após a exclusão
-            setRentals((current) =>
-                current.filter((item) => item.id !== rental.id)
-            );
-
-            setPagination((current) => ({ ...current, page: 1 }));
+            if (pagination.page !== 1) setPagination((current) => ({ ...current, page: 1 }));
+            else setRefresh((current) => current + 1);
         } catch (error) {
             console.error("Erro ao excluir locação:", error);
+            alert("Não foi possível excluir a locação. Finalize ou cancele a locação antes de excluí-la.");
         }
     }
 
@@ -130,6 +125,7 @@ const RentalsList = () => {
 
     return (
         <div className="flex flex-col">
+            {loadError && <p className="text-red-500" role="alert">{loadError}</p>}
             {/* Cabeçalho */}
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
@@ -159,7 +155,7 @@ const RentalsList = () => {
                         setSearch(value);
                         setPagination((current) => ({ ...current, page: 1 }));
                     }}
-                    placeholder="Buscar por modelo, placa ou ano..."
+                    placeholder="Buscar por cliente, modelo, marca ou placa..."
                 />
             </div>
 

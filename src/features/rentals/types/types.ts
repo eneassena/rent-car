@@ -5,11 +5,11 @@ type Rental = {
   modalidade: string;
   data_retirada: string;
   data_devolucao: string;
-  valor_diaria: number;
-  valor_fechado: number;
+  valor_diaria: number | null;
+  valor_fechado: number | null;
   valor_total: number;
   status: string;
-  observacoes: string;
+  observacoes: string | null;
   imagem_path?: string | null;
   cliente_nome?: string;
   cliente_cpf?: string;
@@ -27,10 +27,9 @@ export interface CreateRentalDTO {
   modalidade: string;
   data_retirada: string;
   data_devolucao: string;
-  valor_diaria: number;
-  valor_fechado: number;
-  valor_total: number;
-  observacoes: string;
+  valor_diaria: number | null;
+  valor_fechado: number | null;
+  observacoes: string | null;
   imagem?: File | null;
 }
 

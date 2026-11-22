@@ -1,45 +1,44 @@
 const db = require("../../config/database");
 const AppError = require("../../utils/AppError");
 
-function list({ search, page = 1, limit = 20 }) {
+async function list({ search, page = 1, limit = 20 }) {
   const offset = (page - 1) * limit;
   const term = `%${search || ""}%`;
-  const where = search ? "WHERE nome LIKE ? OR cpf LIKE ? OR telefone LIKE ?" : "";
-  const params = search ? [term, term, term] : [];
-  const total = db.prepare(`SELECT COUNT(*) AS total FROM clientes ${where}`).get(...params).total;
-  const rows = db.prepare(`
-    SELECT * FROM clientes ${where}
-    ORDER BY id DESC LIMIT ? OFFSET ?
-  `).all(...params, limit, offset);
-  return { items: rows, pagination: { page, limit, total, pages: Math.ceil(total / limit) } };
+  const where = search ? "WHERE nome LIKE ? OR cpf LIKE ? OR telefone LIKE ? OR email LIKE ?" : "";
+  const params = search ? [term, term, term, term] : [];
+  const [counts] = await db.execute(`SELECT COUNT(*) AS total FROM clientes ${where}`, params);
+  const [items] = await db.execute(
+    `SELECT * FROM clientes ${where} ORDER BY id DESC LIMIT ? OFFSET ?`,
+    [...params, limit, offset]
+  );
+  const total = Number(counts[0].total);
+  return { items, pagination: { page, limit, total, pages: Math.ceil(total / limit) } };
 }
-function get(id) {
-  const row = db.prepare("SELECT * FROM clientes WHERE id = ?").get(id);
-  if (!row) throw new AppError("Cliente não encontrado.", 404);
-  return row;
+async function get(id) {
+  const [rows] = await db.execute("SELECT * FROM clientes WHERE id = ?", [id]);
+  if (!rows.length) throw new AppError("Cliente não encontrado.", 404);
+  return rows[0];
 }
-function create(data, imagePath) {
-  console.log(`Create data: ${JSON.stringify(data)}, image: ${imagePath}`);
-  const result = db.prepare(`
-    INSERT INTO clientes (nome, cpf, telefone, email, endereco, imagem_path)
-    VALUES (@nome, @cpf, @telefone, @email, @endereco, @imagem_path)
-  `).run({ ...data, imagem_path: imagePath || null });
-  return get(result.lastInsertRowid);
+async function create(data, imagePath) {
+  const [result] = await db.execute(
+    `INSERT INTO clientes (nome, cpf, telefone, email, endereco, observacoes, imagem_path)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [data.nome, data.cpf, data.telefone, data.email, data.endereco, data.observacoes, imagePath || null]
+  );
+  return get(result.insertId);
 }
-function update(id, data, imagePath) {
-  get(id);
-  const old = get(id);
-  const nextImage = imagePath || old.imagem_path;
-  db.prepare(`
-    UPDATE clientes SET nome=@nome, cpf=@cpf, telefone=@telefone, email=@email,
-      endereco=@endereco, observacoes=@observacoes, imagem_path=@imagem_path,
-      updated_at=CURRENT_TIMESTAMP WHERE id=@id
-  `).run({ ...data, imagem_path: nextImage, id });
-  return { item: get(id), oldImage: imagePath ? old.imagem_path : null };
+async function update(id, data, imagePath) {
+  const old = await get(id);
+  await db.execute(
+    `UPDATE clientes SET nome=?, cpf=?, telefone=?, email=?, endereco=?, observacoes=?,
+     imagem_path=?, updated_at=CURRENT_TIMESTAMP WHERE id=?`,
+    [data.nome, data.cpf, data.telefone, data.email, data.endereco, data.observacoes, imagePath || old.imagem_path, id]
+  );
+  return { item: await get(id), oldImage: imagePath ? old.imagem_path : null };
 }
-function remove(id) {
-  const row = get(id);
-  db.prepare("DELETE FROM clientes WHERE id = ?").run(id);
+async function remove(id) {
+  const row = await get(id);
+  await db.execute("DELETE FROM clientes WHERE id = ?", [id]);
   return row;
 }
 module.exports = { list, get, create, update, remove };

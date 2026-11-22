@@ -21,7 +21,6 @@ export const vehiclesServices = {
     }
 
     if (vehicle.imagem) {
-      console.log(`Appending image: ${vehicle.imagem}`);
       formData.append("imagem", vehicle.imagem);
     }
     
@@ -30,8 +29,8 @@ export const vehiclesServices = {
     return response.data.data;
   },
 
-  async list(): Promise<PaginatedResponse<Vehicle>> {
-    const response = await api.get("/veiculos");
+  async list(params: { page: number; limit: number; search?: string }): Promise<PaginatedResponse<Vehicle>> {
+    const response = await api.get("/veiculos", { params });
     return response.data.data;
   },
   async getById(id: number): Promise<Vehicle> {
@@ -48,6 +47,7 @@ export const vehiclesServices = {
     formData.append("ano", String(vehicle.ano));
     formData.append("cor", vehicle.cor);
     formData.append("valor_diaria", String(vehicle.valor_diaria));
+    formData.append("status", vehicle.status);
 
     if (vehicle.observacoes) {
       formData.append("observacoes", vehicle.observacoes);
@@ -55,12 +55,6 @@ export const vehiclesServices = {
 
     if (vehicle.imagem instanceof File) {
       formData.append("imagem", vehicle.imagem);
-    }
-
-    console.log("FormData enviado:");
-
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
     }
 
     const response = await api.put(`/veiculos/${id}`, formData);

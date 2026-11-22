@@ -17,6 +17,8 @@ const ClientList = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
   const [pagination, setPagination] = useState<Pagination>({
@@ -30,23 +32,22 @@ const ClientList = () => {
     navigate("/clientes/novo");
   }
 
-  async function loadClients() {
-    try {
-      setLoading(true);
-      const response = await clientesService.list({ page: pagination.page, limit: pagination.limit });
-
-      setClients(response.items);
-      setPagination(response.pagination);
-    } catch (error) {
-      console.error("Erro ao carregar clientes:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadClients();
-  }, []);
+    let active = true;
+    clientesService.list({ page: pagination.page, limit: pagination.limit, search })
+      .then((response) => {
+        if (!active) return;
+        setClients(response.items);
+        setPagination(response.pagination);
+        setLoadError(null);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar clientes:", error);
+        if (active) setLoadError("Não foi possível carregar os clientes.");
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [pagination.page, pagination.limit, search, refresh]);
 
   // 2. Definir as colunas
   const columns: Column<Client>[] = [
@@ -88,11 +89,8 @@ const ClientList = () => {
 
     try {
       await clientesService.delete(id);
-      setClients((current) =>
-        current.filter((item) => item.id !== id)
-      );
-
-      setPagination((current) => ({ ...current, page: 1 }));
+      if (pagination.page !== 1) setPagination((current) => ({ ...current, page: 1 }));
+      else setRefresh((current) => current + 1);
     } catch (error) {
       console.error("Erro ao excluir cliente:", error);
       alert("Não foi possível excluir o cliente.");
@@ -105,6 +103,7 @@ const ClientList = () => {
 
   return (
     <div className="space-y-6">
+      {loadError && <p className="text-red-500" role="alert">{loadError}</p>}
       {/* Cabeçalho */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <HeaderClient

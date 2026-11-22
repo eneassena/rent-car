@@ -12,17 +12,7 @@ const schema = z.object({
 });
 router.get("/",c.list);
 router.get("/:id",c.get);
-router.post(
-  "/",
-  imageUpload("clientes"),
-  (req, res, next) => {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-    next();
-  },
-  c.create
-);
-// router.post("/",image("clientes"),validate(schema),c.create);
+router.post("/", imageUpload("clientes"), validate(schema), c.create);
 router.put("/:id",imageUpload("clientes"),validate(schema),c.update);
 router.delete("/:id",c.remove);
 module.exports = router;

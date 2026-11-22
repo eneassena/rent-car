@@ -1,24 +1,34 @@
 # Locadora API
 
-API REST com Node.js, Express, SQLite (`better-sqlite3`), JWT, Zod e upload local de imagens.
+API REST com Node.js, Express, MySQL 8.4, JWT, Zod e upload local de imagens.
 
 ## Requisitos
 - Node.js 18 ou superior
 - npm
+- MySQL 8.4, ou Docker com Compose
 
 ## Instalação
 1. Copie `.env.example` para `.env`.
-2. Defina `JWT_SECRET` com uma chave aleatória de pelo menos 32 caracteres.
-3. Defina a senha inicial do administrador (mínimo 12 caracteres).
-4. Execute `npm install`.
-5. Execute `npm run dev`.
+2. Configure `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_DATABASE`, `MYSQL_USER` e `MYSQL_PASSWORD`.
+   Para o Compose, configure também `MYSQL_ROOT_PASSWORD` e execute `docker compose up -d`.
+   Em um MySQL existente, crie o banco e conceda ao usuário acesso para criar e alterar tabelas.
+3. Defina `JWT_SECRET` com uma chave aleatória de pelo menos 32 caracteres.
+4. Configure `ADMIN_NAME`, `ADMIN_EMAIL` e `ADMIN_PASSWORD` (mínimo 12 caracteres).
+5. Execute `npm install` e depois `npm run dev` dentro de `locadora-api`.
+6. Configure `VITE_API_URL=http://localhost:3001/api` no `.env` do frontend e execute `npm install` e `npm run start` na raiz.
 
-As migrations são executadas automaticamente e o administrador é criado somente se a tabela `usuarios` estiver vazia.
+As migrations são executadas automaticamente antes de iniciar o servidor e o administrador é criado somente se a tabela `usuarios` estiver vazia. Também é possível executar `npm run migrate` separadamente.
 
-## Importante para quem já executou a migration inicial
-Se você já tem a tabela `migrations` e executou `001_initial.sql` na versão anterior do projeto, mantenha o banco existente e copie somente a migration `002_add_images.sql` (e os arquivos atualizados). Não apague `data/database.sqlite` e não tente executar novamente uma migration já registrada.
+## Dados existentes no SQLite
+As migrations criam as tabelas no MySQL, mas **não copiam os dados do SQLite**. Preserve os arquivos SQLite e a pasta `uploads`; para manter os cadastros existentes é necessária uma importação separada, incluindo IDs, relacionamentos e caminhos das imagens. A configuração MySQL não usa nem modifica o banco SQLite.
 
-Se seu banco já tem a migration `001_initial.sql` registrada, a inicialização executará apenas `002_add_images.sql`.
+## Testes de integração
+Os testes exigem um banco MySQL vazio e descartável, criado previamente. Eles criam tabelas e dados nesse banco; nunca indique um banco de produção.
+
+```bash
+MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 MYSQL_USER=usuario MYSQL_PASSWORD=senha \
+MYSQL_TEST_DATABASE=locadora_teste npm test
+```
 
 ## Autenticação
 - `POST /api/auth/login` é público.
@@ -27,7 +37,7 @@ Se seu banco já tem a migration `001_initial.sql` registrada, a inicialização
 
 Exemplo:
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@locadora.com","password":"TroqueEstaSenha123!"}'
 ```
@@ -65,7 +75,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ## Envio de imagens
 Para `POST` e `PUT` de clientes, veículos e locações, envie `multipart/form-data`; os campos de texto vão junto com o campo de arquivo `imagem`. Formatos aceitos pelo filtro inicial: JPEG, PNG e WebP; limite 5 MB.
 
-O caminho relativo fica no SQLite, por exemplo `/uploads/veiculos/<uuid>.webp`. A rota `/uploads` é pública nesta versão. Não armazene documentos ou imagens sensíveis nela sem implementar entrega autenticada.
+O caminho relativo fica no MySQL, por exemplo `/uploads/veiculos/<uuid>.webp`. A rota `/uploads` é pública nesta versão. Não armazene documentos ou imagens sensíveis nela sem implementar entrega autenticada.
 
 ## Regras de locação
 - Datas no formato `YYYY-MM-DD`.
@@ -80,13 +90,13 @@ O caminho relativo fica no SQLite, por exemplo `/uploads/veiculos/<uuid>.webp`. 
 ## Exemplos
 Login:
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@locadora.com","password":"TroqueEstaSenha123!"}'
 ```
 
 Criar cliente (sem imagem):
-Use JSON? Os endpoints de cadastro aceitam multipart por causa do middleware de imagem. Envie `multipart/form-data` mesmo sem arquivo, ou ajuste as rotas para aceitar JSON caso queira suportar os dois formatos.
+Os endpoints aceitam JSON sem imagem ou `multipart/form-data` com o campo opcional `imagem`.
 
 Criar locação:
 Campos: `cliente_id`, `veiculo_id`, `modalidade`, `data_retirada`, `data_devolucao`, `observacoes` e `valor_diaria` (DIARIA, opcional) ou `valor_fechado` (PERIODO).

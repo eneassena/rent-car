@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const db = require("../../config/database");
+const db = require("../../config/database.mysql");
 
 async function createAdmin() {
   const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
@@ -10,17 +10,18 @@ async function createAdmin() {
     throw new Error("ADMIN_PASSWORD deve ter pelo menos 12 caracteres.");
   }
 
-  const existing = db.prepare("SELECT id FROM usuarios LIMIT 1").get();
-  if (existing) {
+  const existing = (await db.execute("SELECT id FROM usuarios LIMIT 1"))[0];
+  if (existing.length > 0) {
     console.log("Administrador já cadastrado.");
     return;
   }
 
   const hash = await bcrypt.hash(ADMIN_PASSWORD, 12);
-  db.prepare(`
-    INSERT INTO usuarios (nome, email, senha_hash, role)
-    VALUES (?, ?, ?, 'ADMIN')
-  `).run(ADMIN_NAME, ADMIN_EMAIL.toLowerCase().trim(), hash);
+  await db.execute(
+    `INSERT INTO usuarios (nome, email, senha_hash, role)
+    VALUES (?, ?, ?, 'ADMIN')`,
+    [ADMIN_NAME, ADMIN_EMAIL.toLowerCase().trim(), hash]
+  );
   console.log("Administrador criado com sucesso.");
 }
 
